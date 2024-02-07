@@ -5,10 +5,10 @@ entries:
       category: Infrastructure
     apiVersion: v2
     appVersion: 1.10.0
-    created: "2024-02-07T13:06:05.740605827Z"
+    created: "2024-02-07T14:45:05.947611636Z"
     description: A Library Helm Chart for grouping common logic between bitnami charts.
       This chart is not deployable by itself.
-    digest: 17b996beb2c8b440187894899efe23a403e40d03b44853578aba0954d4027461
+    digest: 591c3e3000019580d9081e8e64480d26a2c7fe656d008236e6f46002fdb81003
     home: https://github.com/bitnami/charts/tree/master/bitnami/common
     icon: https://bitnami.com/downloads/logos/bitnami-mark.png
     keywords:
@@ -31,9 +31,9 @@ entries:
   etherpad:
   - apiVersion: v2
     appVersion: 1.8.1
-    created: "2024-02-07T13:06:05.74123483Z"
+    created: "2024-02-07T14:45:05.947999134Z"
     description: A Helm chart for Etherpad
-    digest: 9e02e5402980dbc38113a67bf30a20d870ed2214e666e3b8a54e6095e3289fac
+    digest: 64e8b42d80505e18eb0582bc87eb2ac449785cd41992e2c0c07c5f2ea1b911e4
     icon: https://etherpad.org/img/brand.svg
     name: etherpad
     type: application
@@ -43,9 +43,9 @@ entries:
   guestbook:
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-02-07T13:06:05.741438179Z"
+    created: "2024-02-07T14:45:05.948166518Z"
     description: Sample application
-    digest: f359592931371e7280d6433704856903b34fda58c8b6816ab4d38fc9e5ff8bae
+    digest: c67be9dd0566bca5552a59a11d0ca0743c2a38df74be4d3de25dd074db5928ba
     name: guestbook
     urls:
     - https://kmee.github.io/kmee-helm-charts/guestbook-0.0.1.tgz
@@ -53,7 +53,7 @@ entries:
   odoo-doodba:
   - apiVersion: v2
     appVersion: "15.0"
-    created: "2024-02-07T13:06:05.748021199Z"
+    created: "2024-02-07T14:45:05.955642908Z"
     dependencies:
     - condition: postgresql.enabled,
       name: postgresql
@@ -64,7 +64,7 @@ entries:
       repository: file://../redis
       version: 15.7.x
     description: Odoo chart for Kubernetes using Tecnativa's Docker odoo base (Doodba)
-    digest: b0aacf154bd877e1ff2c4155878894a8fb6348cfe0bfacf94a8e164d193af238
+    digest: 4fc096c23cec6471f3ae0494d2be3e01ecd0991fe9516c16c8491da806cb995d
     icon: https://odoocdn.com/openerp_website/static/src/img/assets/png/odoo_logo.png?a=b
     keywords:
     - odoo
@@ -212,14 +212,14 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 11.14.0
-    created: "2024-02-07T13:06:05.752106527Z"
+    created: "2024-02-07T14:45:05.958857321Z"
     dependencies:
     - name: common
       repository: file://../common
       version: 1.x.x
     description: Chart for PostgreSQL, an object-relational database management system
       (ORDBMS) with an emphasis on extensibility and on standards-compliance.
-    digest: 00c5948bb9ac10f703ceb55c536532cb158c1f3050dc18554289d466a7c4c0b9
+    digest: 9e6eda8db08a88bd40c4e0676acf11c36e9c1b02bc8111f02b678e838c116720
     home: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
     icon: https://bitnami.com/assets/stacks/postgresql/img/postgresql-stack-220x234.png
     keywords:
@@ -246,7 +246,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 6.2.6
-    created: "2024-02-07T13:06:05.755612517Z"
+    created: "2024-02-07T14:45:05.963122243Z"
     dependencies:
     - name: common
       repository: file://../common
@@ -254,7 +254,7 @@ entries:
     description: Open source, advanced key-value store. It is often referred to as
       a data structure server since keys can contain strings, hashes, lists, sets
       and sorted sets.
-    digest: 32ff6027306d6fbcf8152f94501aaeccc45da1ec079d9ea34b2574e613c00d37
+    digest: 29dd2c08d7e86855ce904f1052a8c7f8753008d0511e470793d3eb6aa18d2b7f
     home: https://github.com/bitnami/charts/tree/master/bitnami/redis
     icon: https://bitnami.com/assets/stacks/redis/img/redis-stack-220x234.png
     keywords:
@@ -273,4 +273,4 @@ entries:
     urls:
     - https://kmee.github.io/kmee-helm-charts/redis-15.7.6.tgz
     version: 15.7.6
-generated: "2024-02-07T13:06:05.739361399Z"
+generated: "2024-02-07T14:45:05.946813829Z"
