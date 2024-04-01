@@ -56,7 +56,7 @@ spec:
               serviceName: {{ include "odoo-doodba.fullname" $ }}
               servicePort: {{ $.Values.service.port }}
             {{ end }}
-          - path: /longpolling
+          - path: /websocket
             {{ if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.Version }}
             pathType: ImplementationSpecific
             {{ end }}
@@ -65,10 +65,10 @@ spec:
               service:
                 name: {{ include "odoo-doodba.fullname" $ }}
                 port:
-                  number: {{ $.Values.service.longPollingPort }}
+                  number: {{ $.Values.service.websocketPort }}
             {{ else }}
               serviceName: {{ include "odoo-doodba.fullname" $ }}
-              servicePort: {{ $.Values.service.longPollingPort }}
+              servicePort: {{ $.Values.service.websocketPort }}
             {{ end }}
   {{- end }}
 {{- end }}
