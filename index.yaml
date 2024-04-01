@@ -5,10 +5,10 @@ entries:
       category: Infrastructure
     apiVersion: v2
     appVersion: 1.10.0
-    created: "2024-04-01T15:06:41.636640156Z"
+    created: "2024-04-01T16:28:49.164185078Z"
     description: A Library Helm Chart for grouping common logic between bitnami charts.
       This chart is not deployable by itself.
-    digest: 522eb650499a1d7ac7103de2702f46f184890b174b8640b96ac65548d8e8422c
+    digest: a4e1db32209676da37596083119a10f8d33e7e7c44a8feced3050cde4dc60c70
     home: https://github.com/bitnami/charts/tree/master/bitnami/common
     icon: https://bitnami.com/downloads/logos/bitnami-mark.png
     keywords:
@@ -31,9 +31,9 @@ entries:
   etherpad:
   - apiVersion: v2
     appVersion: 1.8.1
-    created: "2024-04-01T15:06:41.637033963Z"
+    created: "2024-04-01T16:28:49.164572991Z"
     description: A Helm chart for Etherpad
-    digest: 3457b1ae025f05dc62f7e6a44a4d1c9439aaa19977ed4fc78a11fe24ecf5dc9c
+    digest: 0230ab1aa38c4d6b38253e32179f66eeede5bbc7f9c010ab043b5ccfe72cee15
     icon: https://etherpad.org/img/brand.svg
     name: etherpad
     type: application
@@ -43,9 +43,9 @@ entries:
   guestbook:
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-04-01T15:06:41.637203189Z"
+    created: "2024-04-01T16:28:49.164746915Z"
     description: Sample application
-    digest: 706289af8298a430fce9080e666f4b466b316b2ee3785312e23a11f821ef8b27
+    digest: 582aaee0cb0f2bce88e4ff6321d802531dac2c07ce58ba0cd37972c9ba6061f7
     name: guestbook
     urls:
     - https://kmee.github.io/kmee-helm-charts/guestbook-0.0.1.tgz
@@ -53,7 +53,7 @@ entries:
   odoo-doodba:
   - apiVersion: v2
     appVersion: "15.0"
-    created: "2024-04-01T15:06:41.644729545Z"
+    created: "2024-04-01T16:28:49.17185677Z"
     dependencies:
     - condition: postgresql.enabled,
       name: postgresql
@@ -65,7 +65,7 @@ entries:
       version: 15.7.x
     description: Odoo chart for Kubernetes using Tecnativa's Docker odoo base (Doodba)
       (add websocket support)
-    digest: 287a29253b5629c01fb3568eb40a6425da7f2fb3fad67bba780725ad7cbcad91
+    digest: bffb76f9724bb969d2c5d5c75afaa8262387d32c8e119d984dde71b36a948a7a
     icon: https://odoocdn.com/openerp_website/static/src/img/assets/png/odoo_logo.png?a=b
     keywords:
     - odoo
@@ -291,14 +291,14 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 11.14.0
-    created: "2024-04-01T15:06:41.648027003Z"
+    created: "2024-04-01T16:28:49.175064962Z"
     dependencies:
     - name: common
       repository: file://../common
       version: 1.x.x
     description: Chart for PostgreSQL, an object-relational database management system
       (ORDBMS) with an emphasis on extensibility and on standards-compliance.
-    digest: da897ab957e12f9b5417c27f2c82c683fcddd88331eeea74f291a4cf0e8ec4c7
+    digest: e635cadd2da06bc9f1cd067d22c0ee259f6f1aaf4ae3061c1d326ce0986a0cae
     home: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
     icon: https://bitnami.com/assets/stacks/postgresql/img/postgresql-stack-220x234.png
     keywords:
@@ -325,7 +325,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 6.2.6
-    created: "2024-04-01T15:06:41.651918712Z"
+    created: "2024-04-01T16:28:49.179138301Z"
     dependencies:
     - name: common
       repository: file://../common
@@ -333,7 +333,7 @@ entries:
     description: Open source, advanced key-value store. It is often referred to as
       a data structure server since keys can contain strings, hashes, lists, sets
       and sorted sets.
-    digest: 17d7968584972befbd2ca9bf66e99beb11a90a8f7c43ecef23b8925a1154bb2f
+    digest: ba0652cdae20c05fba5a4fe1d0bf8cd560ffa594def8da511f6553329dfc1804
     home: https://github.com/bitnami/charts/tree/master/bitnami/redis
     icon: https://bitnami.com/assets/stacks/redis/img/redis-stack-220x234.png
     keywords:
@@ -352,4 +352,4 @@ entries:
     urls:
     - https://kmee.github.io/kmee-helm-charts/redis-15.7.6.tgz
     version: 15.7.6
-generated: "2024-04-01T15:06:41.635905973Z"
+generated: "2024-04-01T16:28:49.163444968Z"
