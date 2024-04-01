@@ -65,10 +65,10 @@ spec:
               service:
                 name: {{ include "odoo-doodba.fullname" $ }}
                 port:
-                  number: {{ $.Values.service.websocketPort }}
+                  number: {{ $.Values.service.webSocketPort }}
             {{ else }}
               serviceName: {{ include "odoo-doodba.fullname" $ }}
-              servicePort: {{ $.Values.service.websocketPort }}
+              servicePort: {{ $.Values.service.webSocketPort }}
             {{ end }}
   {{- end }}
 {{- end }}
