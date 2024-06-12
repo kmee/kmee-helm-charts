@@ -1,7 +1,7 @@
 {{- if .Values.ingress.enabled -}}
-{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/IngressClass" }}
+{{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1/IngressClass" }}
 apiVersion: networking.k8s.io/v1
-{{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/IngressClass" }}
+{{- else if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/IngressClass" }}
 apiVersion: networking.k8s.io/v1beta1
 {{- else }}
 apiVersion: extensions/v1beta1
@@ -43,11 +43,9 @@ spec:
       http:
         paths:
           - path: /
-            {{ if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.Version }}
             pathType: ImplementationSpecific
-            {{ end }}
             backend:
-            {{ if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.Version }}
+            {{ if $.Capabilities.APIVersions.Has "networking.k8s.io/v1/IngressClass" }}
               service:
                 name: {{ include "odoo-doodba.fullname" $ }}
                 port:
@@ -57,11 +55,9 @@ spec:
               servicePort: {{ $.Values.service.port }}
             {{ end }}
           - path: /websocket
-            {{ if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.Version }}
             pathType: ImplementationSpecific
-            {{ end }}
             backend:
-            {{ if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.Version }}
+            {{ if $.Capabilities.APIVersions.Has "networking.k8s.io/v1/IngressClass" }}
               service:
                 name: {{ include "odoo-doodba.fullname" $ }}
                 port:
