@@ -67,6 +67,8 @@ spec:
             - name: http
               containerPort: 8069
           env:
+          {{- if .Values.postgresql }}
+          {{- if .Values.postgresql.enabled }}
           - name: PGHOST
             value: {{ ternary (include "odoo-doodba.postgresql.fullname" .) .Values.postgresql.postgresHost .Values.postgresql.enabled | default ((.Values.config).PGHOST | quote) | default "localhost" }}
           - name: PGUSER
@@ -76,6 +78,8 @@ spec:
               secretKeyRef:
                 name: {{ ternary (printf "%s-%s" .Release.Name "postgresql") (include "odoo-doodba.fullname" .) .Values.postgresql.enabled | quote }}
                 key: postgresql-password
+          {{- end}}
+          {{- end}}
           - name: ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
