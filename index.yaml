@@ -5,10 +5,10 @@ entries:
       category: Infrastructure
     apiVersion: v2
     appVersion: 1.10.0
-    created: "2024-07-01T14:44:15.326791221Z"
+    created: "2024-07-01T15:10:42.041626707Z"
     description: A Library Helm Chart for grouping common logic between bitnami charts.
       This chart is not deployable by itself.
-    digest: c6d49b976edd32d3b428d458489dbd3549e56553c92491c8d32f82e01e0b25a6
+    digest: fbc4da180237195d21b2ac6ff026051e644f84c5a258688b85eba2602f4a7d66
     home: https://github.com/bitnami/charts/tree/master/bitnami/common
     icon: https://bitnami.com/downloads/logos/bitnami-mark.png
     keywords:
@@ -31,9 +31,9 @@ entries:
   etherpad:
   - apiVersion: v2
     appVersion: 1.8.1
-    created: "2024-07-01T14:44:15.327483662Z"
+    created: "2024-07-01T15:10:42.04209321Z"
     description: A Helm chart for Etherpad
-    digest: c26f184fba46d09f36bbcf8c0ded15f1eac7363f9847e1d5dbd9edf30b5c485f
+    digest: 74a7c46ca4ea0a50f162b1d214f30361b69bf7a9811c7d6a35cc5b07f87f6b51
     icon: https://etherpad.org/img/brand.svg
     name: etherpad
     type: application
@@ -43,9 +43,9 @@ entries:
   guestbook:
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-07-01T14:44:15.327662425Z"
+    created: "2024-07-01T15:10:42.042311367Z"
     description: Sample application
-    digest: 94b779498b0ac319f894fedf150d42aec74a1ef433225b75b3912806777d0ff0
+    digest: bd453e5535760054eeee07e809c22848cafb8f554be660d687a74fb8dc0cf1ea
     name: guestbook
     urls:
     - https://kmee.github.io/kmee-helm-charts/guestbook-0.0.1.tgz
@@ -53,7 +53,7 @@ entries:
   odoo-doodba:
   - apiVersion: v2
     appVersion: "15.0"
-    created: "2024-07-01T14:44:15.335585143Z"
+    created: "2024-07-01T15:10:42.051544545Z"
     dependencies:
     - condition: postgresql.enabled,
       name: postgresql
@@ -65,7 +65,7 @@ entries:
       version: 15.7.x
     description: Odoo chart for Kubernetes using Tecnativa's Docker odoo base (Doodba)
       (add websocket support)
-    digest: eab85d5581edb2287774585e49b272e4e3ed04e15e9d991482b3d86d1e7058d2
+    digest: 832629c88a0c5f5cdfeba5192e4d27dab1f13100189468487593de6fad54a5f8
     icon: https://odoocdn.com/openerp_website/static/src/img/assets/png/odoo_logo.png?a=b
     keywords:
     - odoo
@@ -372,14 +372,14 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 11.14.0
-    created: "2024-07-01T14:44:15.338859493Z"
+    created: "2024-07-01T15:10:42.054984465Z"
     dependencies:
     - name: common
       repository: file://../common
       version: 1.x.x
     description: Chart for PostgreSQL, an object-relational database management system
       (ORDBMS) with an emphasis on extensibility and on standards-compliance.
-    digest: d91aeda8505721196230492b3ac71351fbe923b9295bc28429fdbcd0e3027a53
+    digest: 460c27d3dcb4ac883f2c9103c050fcfc67e2c9ce53e73109b53d8342b48be84f
     home: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
     icon: https://bitnami.com/assets/stacks/postgresql/img/postgresql-stack-220x234.png
     keywords:
@@ -406,7 +406,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 6.2.6
-    created: "2024-07-01T14:44:15.342551701Z"
+    created: "2024-07-01T15:10:42.059196848Z"
     dependencies:
     - name: common
       repository: file://../common
@@ -414,7 +414,7 @@ entries:
     description: Open source, advanced key-value store. It is often referred to as
       a data structure server since keys can contain strings, hashes, lists, sets
       and sorted sets.
-    digest: 43def4cce8016f83baade27ad811326640b95a8add1c2717af1a0daa36685b83
+    digest: 0424dafae6b87487fe2c84b581c15d215c53de812ea24a02e920c9defc330f5f
     home: https://github.com/bitnami/charts/tree/master/bitnami/redis
     icon: https://bitnami.com/assets/stacks/redis/img/redis-stack-220x234.png
     keywords:
@@ -433,4 +433,4 @@ entries:
     urls:
     - https://kmee.github.io/kmee-helm-charts/redis-15.7.6.tgz
     version: 15.7.6
-generated: "2024-07-01T14:44:15.325605232Z"
+generated: "2024-07-01T15:10:42.03996041Z"
