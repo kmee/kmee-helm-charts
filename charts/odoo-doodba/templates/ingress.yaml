@@ -54,17 +54,17 @@ spec:
               serviceName: {{ include "odoo-doodba.fullname" $ }}
               servicePort: {{ $.Values.service.port }}
             {{ end }}
-          - path: /websocket
+          - path: /longpolling
             pathType: ImplementationSpecific
             backend:
             {{ if $.Capabilities.APIVersions.Has "networking.k8s.io/v1/IngressClass" }}
               service:
                 name: {{ include "odoo-doodba.fullname" $ }}
                 port:
-                  number: {{ $.Values.service.webSocketPort }}
+                  number: {{ $.Values.service.longPollingPort }}
             {{ else }}
               serviceName: {{ include "odoo-doodba.fullname" $ }}
-              servicePort: {{ $.Values.service.webSocketPort }}
+              servicePort: {{ $.Values.service.longPollingPort }}
             {{ end }}
   {{- end }}
 {{- end }}

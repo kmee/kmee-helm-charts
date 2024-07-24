@@ -9,7 +9,7 @@ dependencies:
   name: redis
   repository: file://../redis
   version: 15.7.x
-description: Odoo chart for Kubernetes using Tecnativa's Docker odoo base (Doodba) (add websocket support)
+description: Odoo chart for Kubernetes using Tecnativa's Docker odoo base (Doodba) (longpolling)
 icon: https://odoocdn.com/openerp_website/static/src/img/assets/png/odoo_logo.png?a=b
 keywords:
 - odoo
@@ -19,4 +19,4 @@ maintainers:
   name: Paul Catinean
   url: http://pledra.com
 name: odoo-doodba
-version: 2.0.981
+version: 2.0.902
