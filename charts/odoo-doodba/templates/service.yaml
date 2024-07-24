@@ -19,10 +19,9 @@ spec:
     - port: {{ .Values.service.port }}
       targetPort: 8069
       name: http
-      ports:
-    - port: {{ .Values.service.webSocketPort }}
+    - port: {{ .Values.service.longPollingPort }}
       targetPort: 8072
-      name: websocket
+      name: longpolling
   selector:
     app.kubernetes.io/name: {{ include "odoo-doodba.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

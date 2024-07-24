@@ -124,7 +124,7 @@ redis:
 service:
   type: ClusterIP
   port: 80
-  webSocketPort: 8072
+  longPollingPort: 8072
   # loadBalancerIP:
 
   annotations: {}
