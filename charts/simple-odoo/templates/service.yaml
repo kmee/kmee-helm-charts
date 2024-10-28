@@ -1,0 +1,32 @@
+{{- $validPorts := false -}}
+{{- range .Values.ingress.ports }}
+  {{- if and .name .number }}
+    {{- $validPorts = true -}}
+  {{- end }}
+{{- end }}
+
+{{- if not $validPorts }}
+  {{ fail "At least one port must have valid 'name' and 'number' fields" }}
+{{- end }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-service
+  annotations:
+    checksum/service: "{{- $concat := "" -}}
+                        {{- range .Values.ingress.ports -}}
+                        {{- $concat = printf "%s%s=%s" $concat .name .number -}}
+                        {{- end -}}
+                        {{- $concat | sha256sum }}"
+spec:
+  type: ClusterIP
+  ports:
+    {{- range .Values.ingress.ports }}
+    - name: {{ .name }}
+      port: {{ .number }}
+      targetPort: {{ .number }}
+    {{- end }}
+  selector:
+    app: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "odoo.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

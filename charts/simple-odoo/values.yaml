@@ -1,0 +1,82 @@
+replicaCount: 1
+
+image:
+  repository: registry.chart.example/odoo/odoo
+  tag: "latest"
+  imagePullPolicy: IfNotPresent
+
+updateStrategy:
+  type: Recreate
+
+nodeSelector:
+  enabled: false
+  labelname: "kubernetes.io/hostname"
+  labelvalue: "node-hostname"
+
+imagePullSecret:
+  server: "registry.chart.example"
+  user: "user-chart-example"
+  password: "3e9aafc8-429d-4450-a99f-1cba4adcbeac"
+
+### environment
+config:
+  ENV_0: "value_0"
+  ENV_1: "value_1"
+  ENV_2: "value_2"
+  ENV_3: "value_3"
+  ENV_4: "value_4"
+  ENV_5: "value_5"
+  ENV_6: "value_6"
+  ENV_7: "value_7"
+  ENV_8: "value_8"
+  ENV_9: "value_9"
+
+  
+ingress:
+  enabled: true
+  className: "nginx"
+  wwwNginxRedirect: true
+  recommendedNginxSettings: true
+  tls:
+    enabled: true
+  domains:
+  - url: "domain1.com"
+    secretName: domain1-cert-tls-secret
+  - url: "domain2.com"
+    #secretName: null = auto-generate-name
+  - url: "domain3.com"
+    secretName: domain3-cert-tls-secret
+
+  ports:
+  - path: "/"
+    name: "web"
+    number: 8069
+  - path: "/websocket"
+    name: "secondary"
+    number: 8072
+  #- path: "/api"
+  #  name: "apiexpose"
+  #  number: 4000
+  ingressAnnotations:
+    {}
+
+persistence:
+  enabled: false
+  initVolume: false
+  storageClass: "local-path" ### k3s -> https://github.com/rancher/local-path-provisioner
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+customStartScript:
+  enabled: false
+  command: /bin/sh  ### or /bin/bash ; or /usr/local/bin/python ...
+  script: |
+    #!/bin/sh
+    set -x
+    command_1 &&
+    command_2 &&
+    command_3 &&
+    command_4 &&
+    command_5 &&
+    command_6 &&
+    /default/image/entrypoint || echo 'custom entrypoint script not work, sleeping ...' ;  sleep infinity

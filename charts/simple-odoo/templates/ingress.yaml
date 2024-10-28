@@ -1,0 +1,69 @@
+{{- if .Values.ingress.enabled }}
+  {{- $validPorts := false -}}
+  {{- $validDomains := false -}}
+
+  {{- range .Values.ingress.ports }}
+    {{- if and .path .name .number }}
+      {{- $validPorts = true -}}
+    {{- end }}
+  {{- end }}
+
+  {{- range .Values.ingress.domains }}
+    {{- if .url }}
+      {{- $validDomains = true -}}
+    {{- end }}
+  {{- end }}
+
+  {{- if not $validPorts }}
+    {{ fail "At least one port must have valid 'path', 'name', and 'number' fields" }}
+  {{- end }}
+
+  {{- if not $validDomains }}
+    {{ fail "At least one domain must have a valid 'url'" }}
+  {{- end }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  annotations:
+    checksum/ingress: "{{ .Values.ingress | toYaml | sha256sum }}"
+  {{ if .Values.ingress.recommendedNginxSettings }}
+    nginx.ingress.kubernetes.io/proxy-buffering: 'on'
+    nginx.ingress.kubernetes.io/proxy-body-size: '2000m'
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '15'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '1500'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '1500'
+    nginx.ingress.kubernetes.io/gzip-types: "application/atom+xml application/javascript application/x-javascript application/json application/rss+xml application/vnd.ms-fontobject application/x-font-ttf application/x-web-app-manifest+json application/xhtml+xml application/xml font/opentype image/svg+xml image/x-icon text/css text/xml text/plain text/x-component text/less"
+  {{ end }}
+  {{ if .Values.ingress.wwwNginxRedirect }}
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+  {{ end }}
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className | quote }}
+  rules:
+  {{- range .Values.ingress.domains }}
+  - host: {{ .url| quote }}
+    http:
+      paths:
+      {{- range $.Values.ingress.ports }}
+      - backend:
+          service:
+            name: {{ $.Release.Name }}-service
+            port:
+              number: {{ .number }}
+        path: {{ .path | quote }}
+        pathType: ImplementationSpecific
+     {{- end }}
+  {{- end }}
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+     {{- range .Values.ingress.domains }}
+    - hosts:
+        - {{ .url }}
+      secretName: {{ default ( replace "." "-" (printf "%s--%s" .url "tls-secret")) .secretName }}
+      {{- end }}
+  {{- end }}
+{{- end }}
