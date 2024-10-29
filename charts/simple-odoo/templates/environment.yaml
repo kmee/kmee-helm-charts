@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "odoo.fullname" . }}-environment
+  annotations:
+    {{- if .Values.customStartScript.enabled }}
+    checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"
+    {{- end }}
+    checksum/environment: "{{ .Values.config | toYaml | sha256sum }}"
+{{ include "odoo.labels" . | indent 4 }}
+type: Opaque
+data:
+  {{- if .Values.config }}
+  {{- range $key, $value := .Values.config }}
+  {{ $key }}: {{ $value | b64enc | quote }}
+  {{- end }}
+  {{- end }}

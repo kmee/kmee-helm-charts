@@ -1,0 +1,112 @@
+{{- $validPorts := false -}}
+{{- range .Values.ingress.ports }}
+  {{- if and .name .number }}
+    {{- $validPorts = true -}}
+  {{- end }}
+{{- end }}
+
+{{- if not $validPorts }}
+  {{ fail "At least one port must have valid 'name' and 'number' fields" }}
+{{- end }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "odoo.fullname" . }}
+  annotations:
+    {{- if .Values.customStartScript.enabled }}
+    checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"
+    {{- end }}
+    checksum/environment: "{{ .Values.config | toYaml | sha256sum }}"
+{{ include "odoo.labels" . | indent 4 }}
+spec:
+  strategy:
+    {{- toYaml .Values.updateStrategy | nindent 4 }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ include "odoo.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ include "odoo.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        {{- if .Values.customStartScript.enabled }}
+        checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"
+        {{- end }}
+        checksum/environment: "{{ .Values.config | toYaml | sha256sum }}"
+    spec:
+      imagePullSecrets:
+      - name: {{ printf "%s-%s" (sha256sum (printf "%s%s" .Values.imagePullSecret.user .Values.imagePullSecret.password) | substr 0 16) .Release.Name }}
+    {{- if .Values.persistence.enabled }}
+    {{- if .Values.persistence.initVolume }}
+      initContainers:
+        - name: volume-init
+          image: busybox
+          command: ['sh', '-c', 'chown 1000:1000 -R /odoo']
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "100Mi"
+            limits:
+              cpu: "100m"
+              memory: "200Mi"
+          volumeMounts:
+          - name: odoo
+            mountPath: /odoo
+      {{- end }}
+      {{- end }}
+      containers:
+        - name: {{ include "odoo.fullname" . }}-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.customStartScript.enabled }}
+          command:
+          - {{ .Values.customStartScript.command }}
+          - /init-script-path/custom-init-script
+          {{- end }}
+          ports:
+          {{- range $.Values.ingress.ports }}
+          - containerPort: {{ .number }}
+            name: {{ .name }}
+          {{- end }}
+          envFrom:
+          - secretRef:
+              name: {{ include "odoo.fullname" . }}-environment
+          volumeMounts:
+          {{ if .Values.persistence.enabled }}
+          - name: odoo
+            mountPath: /var/lib/odoo
+          {{ end }}
+          {{- if .Values.customStartScript.enabled }}
+          - name: init-script-volume
+            mountPath: /init-script-path
+          {{ end }}
+      volumes:
+      {{ if .Values.persistence.enabled }}
+      - name: odoo
+        persistentVolumeClaim:
+          claimName: {{ include "odoo.fullname" . }}-pvc
+      {{ end }}
+      {{- if .Values.customStartScript.enabled }}
+      - name: init-script-volume
+        configMap: 
+          name: {{ .Release.Name }}-custom-start-script
+      {{ end }}
+      {{- if .Values.nodeSelector }}
+      {{- if .Values.nodeSelector.enabled }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: {{ .Values.nodeSelector.labelname }}
+                operator: In
+                values:
+                - "{{ .Values.nodeSelector.labelvalue }}"
+      {{- end }}
+      {{- end }}
