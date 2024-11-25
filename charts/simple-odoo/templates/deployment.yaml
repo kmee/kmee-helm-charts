@@ -69,6 +69,15 @@ spec:
           - {{ .Values.customStartScript.command }}
           - /init-script-path/custom-init-script
           {{- end }}
+          resources:
+          {{- if .Values.performanceLimit.enabled }}
+            requests:
+              memory: "{{ required "Memory request is required when performanceLimit is enabled" .Values.performanceLimit.memory.request }}"
+              cpu: "{{ required "CPU request is required when performanceLimit is enabled" .Values.performanceLimit.cpuTime.request }}"
+            limits:
+              memory: "{{ required "Memory max is required when performanceLimit is enabled" .Values.performanceLimit.memory.max }}"
+              cpu: "{{ required "CPU max is required when performanceLimit is enabled" .Values.performanceLimit.cpuTime.max }}"
+          {{- end }}
           ports:
           {{- range $.Values.ingress.ports }}
           - containerPort: {{ .number }}
