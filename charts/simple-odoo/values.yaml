@@ -13,6 +13,15 @@ nodeSelector:
   labelname: "kubernetes.io/hostname"
   labelvalue: "node-hostname"
 
+performanceLimit:    ### -> https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  enabled: false
+  memory:
+    request: "512Mi"
+    max: "2048Mi"
+  cpuTime:
+    request: "200m"
+    max: "1"
+
 imagePullSecret:
   server: "registry.chart.example"
   user: "user-chart-example"
@@ -20,16 +29,16 @@ imagePullSecret:
 
 ### environment
 config:
-  ENV_0: "value_0"
-  ENV_1: "value_1"
-  ENV_2: "value_2"
-  ENV_3: "value_3"
-  ENV_4: "value_4"
-  ENV_5: "value_5"
-  ENV_6: "value_6"
-  ENV_7: "value_7"
-  ENV_8: "value_8"
-  ENV_9: "value_9"
+  #ENV_0: "value_0"
+  #ENV_1: "value_1"
+  #ENV_2: "value_2"
+  #ENV_3: "value_3"
+  #ENV_4: "value_4"
+  #ENV_5: "value_5"
+  #ENV_6: "value_6"
+  #ENV_7: "value_7"
+  #ENV_8: "value_8"
+  #ENV_9: "value_9"
 
   
 ingress:
