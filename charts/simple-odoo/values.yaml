@@ -89,3 +89,7 @@ customStartScript:
     command_5 &&
     command_6 &&
     /default/image/entrypoint || echo 'custom entrypoint script not work, sleeping ...' ;  sleep infinity
+
+
+## full kubernetes yaml (support expand values)
+extraK8sYaml: {}
