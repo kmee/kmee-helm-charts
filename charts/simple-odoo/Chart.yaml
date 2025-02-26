@@ -2,5 +2,5 @@ apiVersion: v2
 name: simple-odoo
 description: A Helm chart for odoo deploy (odoo only)
 type: application
-version: 1.0.1
-appVersion: "1.0.1"
+version: 1.0.2
+appVersion: "1.0.2"
