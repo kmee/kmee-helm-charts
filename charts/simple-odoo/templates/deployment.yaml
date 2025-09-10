@@ -42,8 +42,8 @@ spec:
     spec:
       imagePullSecrets:
       - name: {{ printf "%s-%s" (sha256sum (printf "%s%s" .Values.imagePullSecret.user .Values.imagePullSecret.password) | substr 0 16) .Release.Name }}
-    {{- if .Values.persistence.enabled }}
-    {{- if .Values.persistence.initVolume }}
+      {{- if .Values.persistence.enabled }}
+      {{- if .Values.persistence.initVolume }}
       initContainers:
         - name: volume-init
           image: busybox
