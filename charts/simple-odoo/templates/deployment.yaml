@@ -64,6 +64,10 @@ spec:
         - name: {{ include "odoo.fullname" . }}-container
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.securityContext }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 6 }}
+          {{- end }}
           {{- if .Values.customStartScript.enabled }}
           command:
           - {{ .Values.customStartScript.command }}
