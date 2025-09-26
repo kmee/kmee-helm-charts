@@ -23,6 +23,9 @@ performanceLimit:    ### -> https://kubernetes.io/docs/concepts/configuration/ma
     max: "1"
 
 imagePullSecret:
+  # Use existing secret
+  existingSecret: ""
+  # OR provide credentials to generate one  
   server: "registry.chart.example"
   user: "user-chart-example"
   password: "3e9aafc8-429d-4450-a99f-1cba4adcbeac"
