@@ -40,8 +40,13 @@ spec:
         {{- end }}
         checksum/environment: "{{ .Values.config | toYaml | sha256sum }}"
     spec:
+      {{- if .Values.imagePullSecret.existingSecret }}
       imagePullSecrets:
-      - name: {{ printf "%s-%s" (sha256sum (printf "%s%s" .Values.imagePullSecret.user .Values.imagePullSecret.password) | substr 0 16) .Release.Name }}
+        - name: {{ .Values.imagePullSecret.existingSecret | quote }}
+      {{- else if and .Values.imagePullSecret.user .Values.imagePullSecret.password }}
+      imagePullSecrets:
+        - name: {{ printf "%s-%s" (sha256sum (printf "%s%s" .Values.imagePullSecret.user .Values.imagePullSecret.password) | substr 0 16) .Release.Name | quote }}
+      {{- end }}      
       {{- if .Values.persistence.enabled }}
       {{- if .Values.persistence.initVolume }}
       initContainers:
@@ -66,7 +71,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.securityContext }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 6 }}
+            {{- toYaml .Values.securityContext | nindent 10 }}
           {{- end }}
           {{- if .Values.customStartScript.enabled }}
           command:
