@@ -1,0 +1,13 @@
+{{- if .Values.customStartScript }}
+{{- if .Values.customStartScript.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-custom-start-script
+  annotations:
+    checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"
+    checksum/environment: "{{ .Values.config | toYaml | sha256sum }}"
+data:
+  custom-init-script: {{ .Values.customStartScript.script | toYaml | indent 1 }}
+{{- end }}
+{{- end }}
