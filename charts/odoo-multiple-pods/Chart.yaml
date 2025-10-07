@@ -1,0 +1,6 @@
+apiVersion: v2
+name: odoo-multiple-pods
+description: A Helm chart for odoo deploy with multiple pods(odoo only)
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
