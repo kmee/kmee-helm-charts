@@ -18,6 +18,8 @@ metadata:
                         {{- $concat = printf "%s%s=%s" $concat .name .number -}}
                         {{- end -}}
                         {{- $concat | sha256sum }}"
+  labels:
+    {{- include "odoo.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:
@@ -27,8 +29,8 @@ spec:
       targetPort: {{ .number }}
     {{- end }}
   selector:
-    {{- if .Values.multiplePods.enabled }}
-    component: web  # Apenas o pod web responde ao service
+    {{- if .Values.multiplePods.enabled | default false }}
+    component: web  # Apenas o pod web responde ao service principal
     {{- else }}
     app: {{ .Release.Name }}
     app.kubernetes.io/name: {{ include "odoo.name" . }}

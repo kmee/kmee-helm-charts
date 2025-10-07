@@ -30,6 +30,10 @@ imagePullSecret:
   user: "user-chart-example"
   password: "3e9aafc8-429d-4450-a99f-1cba4adcbeac"
 
+multiplePods:
+  enabled: false
+  sharedPVC: ""
+
 ### environment
 config:
   #ENV_0: "value_0"

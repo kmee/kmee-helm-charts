@@ -64,7 +64,6 @@ spec:
             - {{ .Values.customStartScript.command }}
             - /init-script-path/custom-init-script
           {{- else }}
-          # Comando específico para XML-RPC
           command: 
             - "/bin/bash"
           args:

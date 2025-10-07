@@ -1,0 +1,20 @@
+{{- if and .Values.multiplePods.enabled .Values.multiplePods.cron.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-cron-service
+  labels:
+    {{- include "odoo.labels" . | nindent 4 }}
+    component: cron
+spec:
+  type: ClusterIP
+  # Cron normalmente não expõe portas, mas se precisar:
+  ports:
+    - name: cron-metrics
+      port: 8069
+      targetPort: 8069
+  selector:
+    component: cron
+    app.kubernetes.io/name: {{ include "odoo.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
