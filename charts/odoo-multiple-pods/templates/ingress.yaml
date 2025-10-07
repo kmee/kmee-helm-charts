@@ -51,7 +51,7 @@ spec:
       {{- range $.Values.ingress.ports }}
       - backend:
           service:
-            name: {{ if and $.Values.multiplePods.enabled (eq .path "/xml-rpc") }}
+            name: {{ if and $.Values.multiplePods.enabled (eq .path "/xmlrpc") }}
              {{ $.Release.Name }}-xmlrpc-service
              {{ else }}
              {{ $.Release.Name }}-web-service
