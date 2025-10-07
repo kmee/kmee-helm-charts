@@ -70,7 +70,7 @@ spec:
             - "-c"
             - |
               sleep 30
-              /opt/odoo/common/entrypoint /usr/local/bin/odoo --workers=0
+              /opt/odoo/common/entrypoint /usr/local/bin/odoo --workers=0 --no-http
           {{- end }}
           resources:
             {{- if .Values.performanceLimit.enabled }}

@@ -1,0 +1,19 @@
+{{- if and .Values.multiplePods.enabled .Values.multiplePods.xmlrpc.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-xmlrpc-service
+  labels:
+    {{- include "odoo.labels" . | nindent 4 }}
+    component: xmlrpc
+spec:
+  type: ClusterIP
+  ports:
+    - name: xmlrpc
+      port: {{ .Values.multiplePods.xmlrpc.port | default 8070 }}
+      targetPort: {{ .Values.multiplePods.xmlrpc.port | default 8070 }}
+  selector:
+    component: xmlrpc
+    app.kubernetes.io/name: {{ include "odoo.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

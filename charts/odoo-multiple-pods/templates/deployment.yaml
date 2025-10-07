@@ -1,5 +1,4 @@
 {{- if .Values.multiplePods.enabled }}
-{{- /* Deployment para Web Pod (apenas quando multiplePods enabled) */}}
 {{- $validPorts := false -}}
 {{- range .Values.ingress.ports }}
   {{- if and .name .number }}
@@ -118,30 +117,7 @@ spec:
           {{- if .Values.customStartScript.enabled }}
           - name: init-script-volume
             mountPath: /init-script-path
-          {{- end }}
-          startupProbe:
-            httpGet:
-              path: /web
-              port: 8069
-            failureThreshold: 1200      # Muito alto para startup
-            periodSeconds: 10
-            timeoutSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /web
-              port: 8069
-            initialDelaySeconds: 120
-            periodSeconds: 30
-            timeoutSeconds: 10
-            failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              path: /web
-              port: 8069
-            initialDelaySeconds: 60
-            periodSeconds: 20
-            timeoutSeconds: 5
-            failureThreshold: 3
+          {{- end }}          
       volumes:
       {{- if .Values.persistence.enabled }}
       - name: odoo
@@ -183,12 +159,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "odoo.fullname" . }}
+  labels:
+    {{- include "odoo.labels" . | nindent 4 }}
   annotations:
     {{- if .Values.customStartScript.enabled }}
     checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"
     {{- end }}
     checksum/environment: "{{ .Values.config | toYaml | sha256sum }}"
-  {{ include "odoo.labels" . | indent 4 }}
 spec:
   strategy:
     {{- toYaml .Values.updateStrategy | nindent 4 }}
