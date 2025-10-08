@@ -55,6 +55,15 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           {{- end }}
+          startupProbe:
+            httpGet:
+              host: {{ .Release.Name }}-web-service
+              port: 8069
+              path: /web/login
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 60 
           {{- if .Values.customStartScript.enabled }}
           command:
             - {{ .Values.customStartScript.command }}
