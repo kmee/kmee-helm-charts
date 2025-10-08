@@ -33,24 +33,18 @@ spec:
       imagePullSecrets:
         - name: {{ printf "%s-%s" (sha256sum (printf "%s%s" .Values.imagePullSecret.user .Values.imagePullSecret.password) | substr 0 16) .Release.Name | quote }}
       {{- end }}
-      {{- if .Values.persistence.enabled }}
-      {{- if .Values.persistence.initVolume }}
       initContainers:
-        - name: volume-init
-          image: busybox
-          command: ['sh', '-c', 'chown 1000:1000 -R /odoo']
-          resources:
-            requests:
-              cpu: "50m"
-              memory: "100Mi"
-            limits:
-              cpu: "100m"
-              memory: "200Mi"
-          volumeMounts:
-            - name: odoo
-              mountPath: /odoo
-      {{- end }}
-      {{- end }}
+      - name: await-web
+        image: busybox:latest
+        command: ['sh', '-c']
+        args:
+          - |
+            echo "Aguardando o serviço web estar pronto...";
+            while ! wget -q -O /dev/null --timeout=2 --tries=1 http://{{ .Release.Name }}-web-service:8069/web/login; do
+              echo "Web não está pronto. Tentando novamente em 5s...";
+              sleep 5;
+            done;
+            echo "Web está pronto!";
       containers:
         - name: {{ include "odoo.fullname" . }}-cron-container
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
