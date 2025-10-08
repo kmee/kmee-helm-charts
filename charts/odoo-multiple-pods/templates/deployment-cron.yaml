@@ -33,6 +33,7 @@ spec:
       imagePullSecrets:
         - name: {{ printf "%s-%s" (sha256sum (printf "%s%s" .Values.imagePullSecret.user .Values.imagePullSecret.password) | substr 0 16) .Release.Name | quote }}
       {{- end }}
+      {{- if .Values.multiplePods.cron.enableInitContainer }}
       initContainers:
       - name: await-web
         image: busybox:latest
@@ -45,6 +46,7 @@ spec:
               sleep 5;
             done;
             echo "Web está pronto!";
+      {{- end }}
       containers:
         - name: {{ include "odoo.fullname" . }}-cron-container
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
