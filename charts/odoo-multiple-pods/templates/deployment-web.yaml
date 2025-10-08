@@ -110,7 +110,7 @@ spec:
           {{- toYaml .Values.extraEnvFrom | nindent 12 }}
           {{- end }}
           env:
-            {{- range $key, $value := .Values.multiplePods.cron.env }}
+            {{- range $key, $value := .Values.multiplePods.web.env }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
