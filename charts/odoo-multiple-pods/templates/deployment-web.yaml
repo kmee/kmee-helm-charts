@@ -85,7 +85,7 @@ spec:
             - "-c"
             - |
               sleep 30
-              /opt/odoo/common/entrypoint /usr/local/bin/odoo --workers=3
+              /opt/odoo/common/entrypoint /usr/local/bin/odoo
           {{- end }}
           resources:
             {{- if .Values.performanceLimit.enabled }}
@@ -104,13 +104,13 @@ spec:
             name: {{ .name }}
           {{- end }}
           envFrom:
-          - secretRef:
-              name: {{ include "odoo.fullname" . }}-environment
+            - secretRef:
+                name: {{ include "odoo.fullname" . }}-environment
           {{- if .Values.extraEnvFrom }}
-          {{- toYaml .Values.extraEnvFrom | nindent 10 }}
+          {{- toYaml .Values.extraEnvFrom | nindent 12 }}
           {{- end }}
           env:
-            {{- range $key, $value := .Values.multiplePods.web.env }}
+            {{- range $key, $value := .Values.multiplePods.cron.env }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}

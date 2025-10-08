@@ -51,7 +51,7 @@ spec:
       {{- range $.Values.ingress.ports }}
       - backend:
           service:
-            name: {{ if and $.Values.multiplePods.enabled (eq .name "rpc") }}
+            name: {{ if and $.Values.multiplePods.enabled (or (eq .name "xmlrpc") (eq .name "jsonrpc")) }}
              {{ $.Release.Name }}-xmlrpc-service
              {{ else }}
              {{ $.Release.Name }}-web-service
@@ -60,7 +60,7 @@ spec:
               number: {{ .number }}
         path: {{ .path | quote }}
         pathType: ImplementationSpecific
-     {{- end }}
+      {{- end }}
   {{- end }}
   {{- if .Values.ingress.tls.enabled }}
   tls:
