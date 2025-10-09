@@ -36,16 +36,19 @@ spec:
       {{- if .Values.multiplePods.cron.enableInitContainer }}
       initContainers:
       - name: await-web
-        image: busybox:latest
+        image: curlimages/curl:latest  # ou busybox com curl, mas curlimages/curl é mais confiável
         command: ['sh', '-c']
         args:
           - |
             echo "Aguardando o serviço web estar pronto...";
-            while ! wget -q -O /dev/null --timeout=2 --tries=1 http://{{ .Release.Name }}-web-service:8069/web/login; do
-              echo "Web não está pronto. Tentando novamente em 5s...";
-              sleep 5;
-            done;
-            echo "Web está pronto!";
+            while true; do
+              if curl -s -o /dev/null -w "%{http_code}" http://{{ .Release.Name }}-web-service:8069/web/login | grep -q "200"; then
+                echo "Web está pronto!";
+                break;
+              fi
+            echo "Web não está pronto. Tentando novamente em 5s...";
+            sleep 5;
+            done
       {{- end }}
       containers:
         - name: {{ include "odoo.fullname" . }}-cron-container
@@ -55,15 +58,6 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           {{- end }}
-          startupProbe:
-            httpGet:
-              host: {{ .Release.Name }}-web-service
-              port: 8069
-              path: /web/login
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            timeoutSeconds: 3
-            failureThreshold: 60 
           {{- if .Values.customStartScript.enabled }}
           command:
             - {{ .Values.customStartScript.command }}

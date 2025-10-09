@@ -10,8 +10,8 @@ spec:
   type: ClusterIP
   ports:
     - name: xmlrpc
-      port: {{ .Values.multiplePods.xmlrpc.port | default 8070 }}
-      targetPort: {{ .Values.multiplePods.xmlrpc.port | default 8070 }}
+      port: {{ .Values.multiplePods.xmlrpc.port | default 8069 }}
+      targetPort: {{ .Values.multiplePods.xmlrpc.port | default 8069 }}
   selector:
     component: xmlrpc
     app.kubernetes.io/name: {{ include "odoo.name" . }}
