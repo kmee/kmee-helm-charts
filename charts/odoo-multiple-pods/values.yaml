@@ -47,7 +47,9 @@ config:
   #ENV_8: "value_8"
   #ENV_9: "value_9"
 
-  
+ingressLongpolling:
+  enable: false
+
 ingress:
   enabled: true
   className: "nginx"
