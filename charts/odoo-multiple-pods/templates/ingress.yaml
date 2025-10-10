@@ -34,10 +34,6 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: '1500'
     nginx.ingress.kubernetes.io/proxy-send-timeout: '1500'
     nginx.ingress.kubernetes.io/gzip-types: "application/atom+xml application/javascript application/x-javascript application/json application/rss+xml application/vnd.ms-fontobject application/x-font-ttf application/x-web-app-manifest+json application/xhtml+xml application/xml font/opentype image/svg+xml image/x-icon text/css text/xml text/plain text/x-component text/less"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Proto $scheme;
   {{ end }}
   {{ if .Values.ingress.wwwNginxRedirect }}
     nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
