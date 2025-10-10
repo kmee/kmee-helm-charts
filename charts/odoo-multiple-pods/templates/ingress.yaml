@@ -54,7 +54,7 @@ spec:
             name: 
              {{ if and $.Values.multiplePods.enabled (or (eq .name "xmlrpc") (eq .name "jsonrpc")) }}
                 {{ $.Release.Name }}-xmlrpc-service
-             {{ else if and $.Values.multiplePods.enabled (eq .name "longpolling") }}
+             {{ else if and $.Values.multiplePods.enabled (eq .path "/longpolling") }}
                {{ $.Release.Name }}-longpolling-service
              {{ else }}
                {{ $.Release.Name }}-web-service
