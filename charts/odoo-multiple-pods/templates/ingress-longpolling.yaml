@@ -41,7 +41,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  ingressClassName: {{ .Values.ingressLongpolling.className | quote }}
+  ingressClassName: {{ .Values.ingress.className | quote }}
   rules:
   {{- range .Values.ingressLongpolling.domains }}
   - host: {{ .url| quote }}
