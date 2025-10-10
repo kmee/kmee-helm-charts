@@ -1,0 +1,20 @@
+{{- if and .Values.multiplePods.enabled .Values.multiplePods.longpolling.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-longpolling-service
+  labels:
+    {{- include "odoo.labels" . | nindent 4 }}
+    component: longpolling
+spec:
+  type: ClusterIP
+  # longpolling normalmente não expõe portas, mas se precisar:
+  ports:
+    - name: longpolling-metrics
+      port: 8072
+      targetPort: 8072
+  selector:
+    component: longpolling
+    app.kubernetes.io/name: {{ include "odoo.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
