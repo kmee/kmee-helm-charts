@@ -51,10 +51,13 @@ spec:
       {{- range $.Values.ingress.ports }}
       - backend:
           service:
-            name: {{ if and $.Values.multiplePods.enabled (or (eq .name "xmlrpc") (eq .name "jsonrpc")) }}
-             {{ $.Release.Name }}-xmlrpc-service
+            name: 
+             {{ if and $.Values.multiplePods.enabled (or (eq .name "xmlrpc") (eq .name "jsonrpc")) }}
+                {{ $.Release.Name }}-xmlrpc-service
+             {{ else if and $.Values.multiplePods.enabled (eq .path "/longpolling") }}
+               {{ $.Release.Name }}-longpolling-service
              {{ else }}
-             {{ $.Release.Name }}-web-service
+               {{ $.Release.Name }}-web-service
              {{ end }}            
             port:
               number: {{ .number }}
