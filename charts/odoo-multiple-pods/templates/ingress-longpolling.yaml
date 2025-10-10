@@ -1,14 +1,14 @@
-{{- if .Values.ingress.enabled }}
+{{- if .Values.ingressLongpolling.enabled }}
   {{- $validPorts := false -}}
   {{- $validDomains := false -}}
 
-  {{- range .Values.ingress.ports }}
+  {{- range .Values.ingressLongpolling.ports }}
     {{- if and .path .name .number }}
       {{- $validPorts = true -}}
     {{- end }}
   {{- end }}
 
-  {{- range .Values.ingress.domains }}
+  {{- range .Values.ingressLongpolling.domains }}
     {{- if .url }}
       {{- $validDomains = true -}}
     {{- end }}
@@ -24,52 +24,47 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-ingress
+  name: {{ .Release.Name }}-ingress-longpolling
   annotations:
     checksum/ingress: "{{ .Values.ingress | toYaml | sha256sum }}"
-  {{ if .Values.ingress.recommendedNginxSettings }}
-    nginx.ingress.kubernetes.io/proxy-buffering: 'on'
-    nginx.ingress.kubernetes.io/proxy-body-size: '2000m'
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: '15'
-    nginx.ingress.kubernetes.io/proxy-read-timeout: '1500'
-    nginx.ingress.kubernetes.io/proxy-send-timeout: '1500'
+  {{ if .Values.ingressLongpolling.recommendedNginxSettings }}    
+    nginx.ingress.kubernetes.io/proxy-body-size: "5000m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "30000"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '3600'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '3600'
     nginx.ingress.kubernetes.io/gzip-types: "application/atom+xml application/javascript application/x-javascript application/json application/rss+xml application/vnd.ms-fontobject application/x-font-ttf application/x-web-app-manifest+json application/xhtml+xml application/xml font/opentype image/svg+xml image/x-icon text/css text/xml text/plain text/x-component text/less"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header X-Forwarded-Proto $scheme;
   {{ end }}
-  {{ if .Values.ingress.wwwNginxRedirect }}
+  {{ if .Values.ingressLongpolling.wwwNginxRedirect }}
     nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
   {{ end }}
-  {{- with .Values.ingress.annotations }}
+  {{- with .Values.ingressLongpolling.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  ingressClassName: {{ .Values.ingress.className | quote }}
+  ingressClassName: {{ .Values.ingressLongpolling.className | quote }}
   rules:
-  {{- range .Values.ingress.domains }}
+  {{- range .Values.ingressLongpolling.domains }}
   - host: {{ .url| quote }}
     http:
       paths:
-      {{- range $.Values.ingress.ports }}
+      {{- range $.Values.ingressLongpolling.ports }}
       - backend:
           service:
-            name: 
-             {{ if and $.Values.multiplePods.enabled (or (eq .name "xmlrpc") (eq .name "jsonrpc")) }}
-                {{ $.Release.Name }}-xmlrpc-service
-             {{ else if and $.Values.multiplePods.enabled (eq .path "/longpolling") }}
-               
-             {{ else }}
-               {{ $.Release.Name }}-web-service
-             {{ end }}            
+            name:             
+             {{ if and $.Values.multiplePods.enabled (eq .path "/longpolling") }}
+               {{ $.Release.Name }}-longpolling-service             
+             {{ end }}
             port:
               number: {{ .number }}
         path: {{ .path | quote }}
         pathType: ImplementationSpecific
       {{- end }}
   {{- end }}
-  {{- if .Values.ingress.tls.enabled }}
+  {{- if .Values.ingressLongpolling.tls.enabled }}
   tls:
      {{- range .Values.ingress.domains }}
     - hosts:
