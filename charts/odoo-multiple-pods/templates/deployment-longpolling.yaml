@@ -69,7 +69,7 @@ spec:
             - "-c"
             - |
               sleep 30
-              /opt/odoo/common/entrypoint /usr/local/bin/odoo --longpolling-port=8072
+              /opt/odoo/common/entrypoint /usr/local/bin/odoo --gevent=20 --longpolling-port=8072
           {{- end }}
           ports:
             - containerPort: 8072
