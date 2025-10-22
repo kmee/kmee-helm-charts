@@ -3,10 +3,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "odoo.fullname" . }}-webReplicas
+  name: {{ include "odoo.fullname" . }}-web-replicas
   labels:
     {{- include "odoo.labels" . | nindent 4 }}
-    component: webReplicas
+    component: web-replicas
 spec:
   replicas: {{ .Values.multiplePods.webReplicas.replicas }}
   strategy:
@@ -14,12 +14,12 @@ spec:
   selector:
     matchLabels:
       {{- include "odoo.selectorLabels" . | nindent 6 }}
-      component: webReplicas
+      component: web-replicas
   template:
     metadata:
       labels:
         {{- include "odoo.selectorLabels" . | nindent 8 }}
-        component: webReplicas
+        component: web-replicas
       annotations:
         {{- if .Values.customStartScript.enabled }}
         checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"
@@ -51,7 +51,7 @@ spec:
             done
       {{- end }}
       containers:
-        - name: {{ include "odoo.fullname" . }}-webReplicas-container
+        - name: {{ include "odoo.fullname" . }}-web-replicas-container
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.securityContext }}
@@ -73,7 +73,7 @@ spec:
           {{- end }}
           ports:
             - containerPort: 8069
-              name: webReplicas
+              name: web-replicas
           resources:
             {{- if .Values.performanceLimit.enabled }}
             requests:

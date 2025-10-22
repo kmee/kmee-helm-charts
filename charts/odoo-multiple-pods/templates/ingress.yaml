@@ -67,7 +67,7 @@ spec:
               {{- if and $multiplePodsEnabled (or (eq .name "xmlrpc") (eq .name "jsonrpc")) }}             
                 {{ $.Release.Name }}-xmlrpc-service
               {{- else if $webReplicasEnabled }}
-                {{ $.Release.Name }}-webReplicas-service
+                {{ $.Release.Name }}-web-replicas-service
               {{ else}}
                 {{ $.Release.Name }}-web-service
               {{ end }}            
