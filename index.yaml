@@ -5,10 +5,10 @@ entries:
       category: Infrastructure
     apiVersion: v2
     appVersion: 1.10.0
-    created: "2025-10-22T13:54:24.832637071Z"
+    created: "2025-10-22T14:00:05.345726296Z"
     description: A Library Helm Chart for grouping common logic between bitnami charts.
       This chart is not deployable by itself.
-    digest: e7b951ed8d8430d4ac2629949793c13be003b78626d55323909957b6fcfdc498
+    digest: cbbaa14d92586776d16c739c396eb84a4862fddc1309e3c6939041d3a11c1ec6
     home: https://github.com/bitnami/charts/tree/master/bitnami/common
     icon: https://bitnami.com/downloads/logos/bitnami-mark.png
     keywords:
@@ -31,9 +31,9 @@ entries:
   etherpad:
   - apiVersion: v2
     appVersion: 1.8.1
-    created: "2025-10-22T13:54:24.833043536Z"
+    created: "2025-10-22T14:00:05.346136352Z"
     description: A Helm chart for Etherpad
-    digest: 330fcf96f9f3280019e4dc6df7280d566be44ee0f2311e13a15f69bad9c394f4
+    digest: 8817f434de755ce8c5a38f490672c744b6e2d3ac5db1a1be4eaa7412474d9199
     icon: https://etherpad.org/img/brand.svg
     name: etherpad
     type: application
@@ -43,9 +43,9 @@ entries:
   guestbook:
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2025-10-22T13:54:24.833211546Z"
+    created: "2025-10-22T14:00:05.346310036Z"
     description: Sample application
-    digest: c560d72d674285541bb230c51200aeaf103c02e1b83cc6ce0cca6e37f6057288
+    digest: 20efd57c30a778ab9c677c2e50fafb851bf4d4bb48dacbf726141953ccdb4b26
     name: guestbook
     urls:
     - https://kmee.github.io/kmee-helm-charts/guestbook-0.0.1.tgz
@@ -80,7 +80,7 @@ entries:
     version: 2.0.981
   - apiVersion: v2
     appVersion: "15.0"
-    created: "2025-10-22T13:54:24.840865963Z"
+    created: "2025-10-22T14:00:05.354666708Z"
     dependencies:
     - condition: postgresql.enabled,
       name: postgresql
@@ -92,7 +92,7 @@ entries:
       version: 15.7.x
     description: Odoo chart for Kubernetes using Tecnativa's Docker odoo base (Doodba)
       (longpolling)
-    digest: 8544f9ca88a0513fbad731f2fc32abeffd65198c8593aad6c699bfaa58682181
+    digest: 9351eb0e5d70d5321c705d22b8beeb431a16fac166a4598a31677e2262d7b1c2
     icon: https://odoocdn.com/openerp_website/static/src/img/assets/png/odoo_logo.png?a=b
     keywords:
     - odoo
@@ -397,9 +397,9 @@ entries:
   odoo-multiple-pods:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-10-22T13:54:24.841424289Z"
+    created: "2025-10-22T14:00:05.355243636Z"
     description: A Helm chart for odoo deploy with multiple pods(odoo only)
-    digest: d967253c779bbd58ce2e593b1a7df71a4e13a013142a30d33e3774add03364d0
+    digest: 7691fa07b41deb87c65dc16b343767045c3e864441f760389ed07ec3344f1caf
     name: odoo-multiple-pods
     type: application
     urls:
@@ -450,14 +450,14 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 11.14.0
-    created: "2025-10-22T13:54:24.845462208Z"
+    created: "2025-10-22T14:00:05.358587552Z"
     dependencies:
     - name: common
       repository: file://../common
       version: 1.x.x
     description: Chart for PostgreSQL, an object-relational database management system
       (ORDBMS) with an emphasis on extensibility and on standards-compliance.
-    digest: 50813efea50c42196f9eed89092bc7edcf406842bea5293aaaab98d81f3621c3
+    digest: 2cdc9d3517ba2ebb9dc4f609326695664dad24e90a8b901b26f7fb9dd0d8191b
     home: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
     icon: https://bitnami.com/assets/stacks/postgresql/img/postgresql-stack-220x234.png
     keywords:
@@ -484,7 +484,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 6.2.6
-    created: "2025-10-22T13:54:24.848980892Z"
+    created: "2025-10-22T14:00:05.362268879Z"
     dependencies:
     - name: common
       repository: file://../common
@@ -492,7 +492,7 @@ entries:
     description: Open source, advanced key-value store. It is often referred to as
       a data structure server since keys can contain strings, hashes, lists, sets
       and sorted sets.
-    digest: 3855bd70e98ec0fddc3fbcea6ee72c8734e3155d343655babfa885a6eaef28f8
+    digest: 7483bb92967fd5e663099f32c1fe717fa99da05d984f0b1cb90c17cbbbabeae2
     home: https://github.com/bitnami/charts/tree/master/bitnami/redis
     icon: https://bitnami.com/assets/stacks/redis/img/redis-stack-220x234.png
     keywords:
@@ -514,9 +514,9 @@ entries:
   simple-odoo:
   - apiVersion: v2
     appVersion: 1.0.4
-    created: "2025-10-22T13:54:24.849399248Z"
+    created: "2025-10-22T14:00:05.362698892Z"
     description: A Helm chart for odoo deploy (odoo only)
-    digest: da617afc7a663b45c6aec8346a1537087d2acde5055670f773fe193710922584
+    digest: 0362d74af019898cbed5fed454d086f20837007d45ac3999c137490ea9707189
     name: simple-odoo
     type: application
     urls:
@@ -562,4 +562,4 @@ entries:
     urls:
     - https://kmee.github.io/kmee-helm-charts/simple-odoo-1.0.0.tgz
     version: 1.0.0
-generated: "2025-10-22T13:54:24.831857031Z"
+generated: "2025-10-22T14:00:05.344988567Z"
