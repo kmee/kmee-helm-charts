@@ -65,11 +65,9 @@ spec:
           service:
             name: 
               {{- if and $multiplePodsEnabled (or (eq .name "xmlrpc") (eq .name "jsonrpc")) }}             
-                {{ $.Release.Name }}-xmlrpc-service
-              {{- else if $webReplicasEnabled }}
-                {{ $.Release.Name }}-web-replicas-service
+                {{ $.Release.Name }}-xmlrpc-service              
               {{ else}}
-                {{ $.Release.Name }}-web-service
+                {{ $.Release.Name }}-web-replicas-service
               {{ end }}            
             port:
               number: {{ .number }}
