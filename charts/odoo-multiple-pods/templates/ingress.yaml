@@ -1,3 +1,15 @@
+{{- $multiplePodsEnabled := false }}
+{{- $webReplicasEnabled := false }}
+
+{{- if $.Values.multiplePods }}
+  {{- $multiplePodsEnabled = $.Values.multiplePods.enabled | default false }}
+{{- end }}
+
+{{- if $.Values.webReplicas }}
+  {{- $webReplicasEnabled = $.Values.webReplicas.enabled | default false }}
+{{- end }}
+
+
 {{- if .Values.ingress.enabled }}
   {{- $validPorts := false -}}
   {{- $validDomains := false -}}
@@ -52,11 +64,13 @@ spec:
       - backend:
           service:
             name: 
-             {{ if and $.Values.multiplePods.enabled (or (eq .name "xmlrpc") (eq .name "jsonrpc")) }}
-                {{ $.Release.Name }}-xmlrpc-service             
-             {{ else }}
-               {{ $.Release.Name }}-web-service
-             {{ end }}            
+              {{- if and $multiplePodsEnabled (or (eq .name "xmlrpc") (eq .name "jsonrpc")) }}             
+                {{ $.Release.Name }}-xmlrpc-service
+              {{- else if $webReplicasEnabled }}
+                {{ $.Release.Name }}-webReplicas-service
+              {{ else}}
+                {{ $.Release.Name }}-web-service
+              {{ end }}            
             port:
               number: {{ .number }}
         path: {{ .path | quote }}

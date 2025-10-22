@@ -8,10 +8,6 @@ metadata:
     component: longpolling
 spec:
   type: ClusterIP
-  sessionAffinity: ClientIP
-  sessionAffinityConfig:
-    clientIP:
-      timeoutSeconds: 10800
   ports:
     - name: longpolling-metrics
       port: 8072

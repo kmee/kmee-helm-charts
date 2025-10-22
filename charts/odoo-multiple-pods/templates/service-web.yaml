@@ -8,10 +8,6 @@ metadata:
     component: web
 spec:
   type: ClusterIP
-  sessionAffinity: ClientIP
-  sessionAffinityConfig:
-    clientIP:
-      timeoutSeconds: 10800
   ports:
     {{- range .Values.ingress.ports }}
     - name: {{ .name }}

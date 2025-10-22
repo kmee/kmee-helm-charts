@@ -8,10 +8,6 @@ metadata:
     component: xmlrpc
 spec:
   type: ClusterIP
-  sessionAffinity: ClientIP
-  sessionAffinityConfig:
-    clientIP:
-      timeoutSeconds: 10800
   ports:
     - name: xmlrpc
       port: {{ .Values.multiplePods.xmlrpc.port | default 8069 }}
