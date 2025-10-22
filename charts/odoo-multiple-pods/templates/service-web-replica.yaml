@@ -8,10 +8,12 @@ metadata:
     component: web-replicas
 spec:
   type: ClusterIP
-  ports: 
-    - name: web-replicas
-      port: {{ .Values.multiplePods.webReplicas.port | default 8069 }}
-      targetPort: {{ .Values.multiplePods.webReplicas.port | default 8069 }}
+  ports:
+    {{- range .Values.ingress.ports }}
+    - name: {{ .name }}
+      port: {{ .number }}
+      targetPort: {{ .number }}
+    {{- end }}
   selector:
     component: web-replicas
     app.kubernetes.io/name: {{ include "odoo.name" . }}
