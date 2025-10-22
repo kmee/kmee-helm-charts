@@ -54,7 +54,9 @@ spec:
             name: 
              {{ if and $.Values.multiplePods.enabled (or (eq .name "xmlrpc") (eq .name "jsonrpc")) }}
                 {{ $.Release.Name }}-xmlrpc-service             
-             {{ else }}
+             {{ else if and $.Values.webReplicas.enabled }}
+               {{ $.Release.Name }}-webReplicas-service
+             {{ else}}
                {{ $.Release.Name }}-web-service
              {{ end }}            
             port:

@@ -1,0 +1,133 @@
+{{- if .Values.multiplePods.enabled }}
+{{- if .Values.multiplePods.webReplicas.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "odoo.fullname" . }}-webReplicas
+  labels:
+    {{- include "odoo.labels" . | nindent 4 }}
+    component: webReplicas
+spec:
+  replicas: {{ .Values.multiplePods.webReplicas.replicas }}
+  strategy:
+    {{- toYaml .Values.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "odoo.selectorLabels" . | nindent 6 }}
+      component: webReplicas
+  template:
+    metadata:
+      labels:
+        {{- include "odoo.selectorLabels" . | nindent 8 }}
+        component: webReplicas
+      annotations:
+        {{- if .Values.customStartScript.enabled }}
+        checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"
+        {{- end }}
+        checksum/environment: "{{ .Values.config | toYaml | sha256sum }}"
+    spec:
+      {{- if .Values.imagePullSecret.existingSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret.existingSecret | quote }}
+      {{- else if and .Values.imagePullSecret.user .Values.imagePullSecret.password }}
+      imagePullSecrets:
+        - name: {{ printf "%s-%s" (sha256sum (printf "%s%s" .Values.imagePullSecret.user .Values.imagePullSecret.password) | substr 0 16) .Release.Name | quote }}
+      {{- end }}
+      {{- if .Values.multiplePods.webReplicas.enableInitContainer }}
+      initContainers:
+      - name: await-web
+        image: curlimages/curl:latest  # ou busybox com curl, mas curlimages/curl é mais confiável
+        command: ['sh', '-c']
+        args:
+          - |
+            echo "Aguardando o serviço web estar pronto...";
+            while true; do
+              if curl -s -o /dev/null -w "%{http_code}" http://{{ .Release.Name }}-web-service:8069/web/login | grep -q "200"; then
+                echo "Web está pronto!";
+                break;
+              fi
+            echo "Web não está pronto. Tentando novamente em 5s...";
+            sleep 5;
+            done
+      {{- end }}
+      containers:
+        - name: {{ include "odoo.fullname" . }}-webReplicas-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.securityContext }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- end }}           
+          {{- if .Values.customStartScript.enabled }}
+          command:
+            - {{ .Values.customStartScript.command }}
+            - /init-script-path/custom-init-script
+          {{- else }}
+          command: 
+            - "/bin/bash"
+          args:
+            - "-c"
+            - |
+              sleep 30
+              /opt/odoo/common/entrypoint /usr/local/bin/odoo
+          {{- end }}
+          ports:
+            - containerPort: 8069
+              name: webReplicas
+          resources:
+            {{- if .Values.performanceLimit.enabled }}
+            requests:
+              memory: "{{ .Values.performanceLimit.memory.request }}"
+              cpu: "{{ .Values.performanceLimit.cpuTime.request }}"
+            limits:
+              memory: "{{ .Values.performanceLimit.memory.max }}"
+              cpu: "{{ .Values.performanceLimit.cpuTime.max }}"
+            {{- else }}
+            {{- toYaml .Values.multiplePods.webReplicas.resources | nindent 14 }}
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ include "odoo.fullname" . }}-environment
+          {{- if .Values.extraEnvFrom }}
+          {{- toYaml .Values.extraEnvFrom | nindent 12 }}
+          {{- end }}
+          env:
+            {{- range $key, $value := .Values.multiplePods.webReplicas.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          volumeMounts:
+            {{- if .Values.persistence.enabled }}
+            - name: odoo
+              mountPath: /var/lib/odoo
+            {{- end }}
+            {{- if .Values.customStartScript.enabled }}
+            - name: init-script-volume
+              mountPath: /init-script-path
+            {{- end }}
+      volumes:
+        {{- if .Values.persistence.enabled }}
+        - name: odoo
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-odoo-multiple-pods-pvc
+        {{- end }}
+        {{- if .Values.customStartScript.enabled }}
+        - name: init-script-volume
+          configMap:
+            name: {{ .Release.Name }}-custom-start-script
+        {{- end }}
+      {{- if .Values.nodeSelector }}
+      {{- if .Values.nodeSelector.enabled }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: {{ .Values.nodeSelector.labelname }}
+                    operator: In
+                    values:
+                      - "{{ .Values.nodeSelector.labelvalue }}"
+      {{- end }}
+      {{- end }}
+{{- end }}
+{{- end }}
