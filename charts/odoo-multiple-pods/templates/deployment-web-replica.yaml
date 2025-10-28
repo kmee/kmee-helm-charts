@@ -25,6 +25,9 @@ spec:
         checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"
         {{- end }}
         checksum/environment: "{{ .Values.config | toYaml | sha256sum }}"
+        {{- if .Values.podAnnotations }}
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
+        {{- end }}
     spec:
       {{- if .Values.imagePullSecret.existingSecret }}
       imagePullSecrets:
