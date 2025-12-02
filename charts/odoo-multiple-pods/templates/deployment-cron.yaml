@@ -1,5 +1,6 @@
 {{- if .Values.multiplePods.enabled }}
-{{- if .Values.multiplePods.cron.enabled }}
+{{- $cron := get .Values.multiplePods "cron" | default dict }}
+{{- if $cron.enabled | default false }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

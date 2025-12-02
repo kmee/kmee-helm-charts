@@ -1,13 +1,9 @@
 {{- $multiplePodsEnabled := false }}
-{{- $webReplicasEnabled := false }}
 
 {{- if $.Values.multiplePods }}
   {{- $multiplePodsEnabled = $.Values.multiplePods.enabled | default false }}
 {{- end }}
 
-{{- if $.Values.webReplicas }}
-  {{- $webReplicasEnabled = $.Values.webReplicas.enabled | default false }}
-{{- end }}
 
 
 {{- if .Values.ingress.enabled }}
@@ -67,7 +63,7 @@ spec:
               {{- if and $multiplePodsEnabled (or (eq .name "xmlrpc") (eq .name "jsonrpc")) }}             
                 {{ $.Release.Name }}-xmlrpc-service              
               {{ else}}
-                {{ $.Release.Name }}-web-replicas-service
+                {{ $.Release.Name }}-web-service
               {{ end }}            
             port:
               number: {{ .number }}

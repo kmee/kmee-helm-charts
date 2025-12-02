@@ -1,5 +1,6 @@
 {{- if .Values.multiplePods.enabled }}
-{{- if .Values.multiplePods.longpolling.enabled }}
+{{- $longpolling := get .Values.multiplePods "longpolling" | default dict }}
+{{- if $longpolling.enabled | default false }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

@@ -1,4 +1,6 @@
-{{- if and .Values.multiplePods.enabled .Values.multiplePods.xmlrpc.enabled }}
+{{- if .Values.multiplePods.enabled }}
+{{- $xmlrpc := get .Values.multiplePods "xmlrpc" | default dict }}
+{{- if $xmlrpc.enabled | default false }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -16,4 +18,5 @@ spec:
     component: xmlrpc
     app.kubernetes.io/name: {{ include "odoo.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 {{- end }}

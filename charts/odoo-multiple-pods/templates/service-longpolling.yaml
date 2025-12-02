@@ -1,4 +1,6 @@
-{{- if and .Values.multiplePods.enabled .Values.multiplePods.longpolling.enabled }}
+{{- if .Values.multiplePods.enabled }}
+{{- $longpolling := get .Values.multiplePods "longpolling" | default dict }}
+{{- if $longpolling.enabled | default false }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -16,4 +18,5 @@ spec:
     component: longpolling
     app.kubernetes.io/name: {{ include "odoo.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 {{- end }}
