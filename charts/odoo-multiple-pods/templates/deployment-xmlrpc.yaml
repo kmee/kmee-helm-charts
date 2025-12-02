@@ -1,5 +1,6 @@
 {{- if .Values.multiplePods.enabled }}
-{{- if .Values.multiplePods.xmlrpc.enabled }}
+{{- $xmlrpc := get .Values.multiplePods "xmlrpc" | default dict }}
+{{- if $xmlrpc.enabled | default false }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

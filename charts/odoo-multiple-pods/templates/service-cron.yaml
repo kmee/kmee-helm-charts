@@ -1,4 +1,6 @@
-{{- if and .Values.multiplePods.enabled .Values.multiplePods.cron.enabled }}
+{{- if .Values.multiplePods.enabled }}
+{{- $cron := get .Values.multiplePods "cron" | default dict }}
+{{- if $cron.enabled | default false }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -17,4 +19,5 @@ spec:
     component: cron
     app.kubernetes.io/name: {{ include "odoo.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 {{- end }}

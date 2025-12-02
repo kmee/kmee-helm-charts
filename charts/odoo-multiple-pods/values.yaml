@@ -36,12 +36,6 @@ imagePullSecret:
 multiplePods:
   enabled: false
   sharedPVC: ""
-  xmlrpc:
-    enable: false
-  longpolling:
-    enable: false
-  webReplicas:
-    enabled: false
   web:
     enabled: 
 
