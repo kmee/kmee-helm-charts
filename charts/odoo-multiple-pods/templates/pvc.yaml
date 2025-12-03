@@ -1,6 +1,6 @@
 {{- if .Values.persistence.enabled }}
 {{- range $component := list "web" "cron" "xmlrpc" "longpolling"  }}
-{{- if (index $.Values.multiplePods $component).enabled | default true }}
+{{- if (index $.Values.multiplePods $component).enabled | default false }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
