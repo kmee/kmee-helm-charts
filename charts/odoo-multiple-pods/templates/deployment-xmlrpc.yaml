@@ -113,7 +113,7 @@ spec:
         {{- if .Values.persistence.enabled }}
         - name: odoo
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-odoo-multiple-pods-pvc
+            claimName: {{ .Release.Name }}-odoo-multiple-pods-xmlrpc-pvc
         {{- end }}
         {{- if .Values.customStartScript.enabled }}
         - name: init-script-volume
