@@ -37,8 +37,13 @@ multiplePods:
   enabled: true
   sharedPVC: ""
   web:
+    enabled: true
     config:
       #ENV_0: "value_0"    
+  cron:
+    enabled: true
+    config:
+      #ENV_0: "value_0"
 
 ### environment
 config:
