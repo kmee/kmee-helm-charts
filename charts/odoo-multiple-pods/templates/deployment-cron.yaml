@@ -21,6 +21,7 @@ spec:
       labels:
         {{- include "odoo.selectorLabels" . | nindent 8 }}
         component: cron
+        app: odoo
       annotations:
         {{- if .Values.customStartScript.enabled }}
         checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"

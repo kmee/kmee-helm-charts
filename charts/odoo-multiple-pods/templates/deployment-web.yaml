@@ -22,6 +22,7 @@ metadata:
   labels:
     {{- include "odoo.labels" . | nindent 4 }}
     component: web
+    app: odoo
 spec:
   strategy:
     {{- toYaml .Values.updateStrategy | nindent 4 }}
