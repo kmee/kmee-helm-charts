@@ -22,7 +22,9 @@ metadata:
   labels:
     {{- include "odoo.labels" . | nindent 4 }}
     component: web
-    app: odoo
+    {{- if and .Values.autoRollout .Values.autoRollout.enabled }}
+    odoo.kmee.com.br: {{ .Release.Namespace | quote }}
+    {{- end }}
 spec:
   strategy:
     {{- toYaml .Values.updateStrategy | nindent 4 }}
