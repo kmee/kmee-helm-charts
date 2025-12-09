@@ -21,7 +21,9 @@ spec:
       labels:
         {{- include "odoo.selectorLabels" . | nindent 8 }}
         component: xmlrpc
-        app: odoo
+        {{- if and .Values.autoRollout .Values.autoRollout.enabled }}
+        odoo.kmee.com.br: {{ .Release.Namespace | quote }}
+        {{- end }}
       annotations:
         {{- if .Values.customStartScript.enabled }}
         checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"
