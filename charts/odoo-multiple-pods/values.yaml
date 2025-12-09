@@ -25,6 +25,9 @@ performanceLimit:    ### -> https://kubernetes.io/docs/concepts/configuration/ma
     request: "200m"
     max: "1"
 
+autoRollout:
+  enabled: true
+
 imagePullSecret:
   # Use existing secret
   existingSecret: ""
