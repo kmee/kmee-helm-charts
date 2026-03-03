@@ -17,21 +17,21 @@ nodeSelector:
   labelvalue: "node-hostname"
 
 podAnnotations:
-  redeployAt: "20251029-123456"
+  redeployAt: "20251029-123456" ## change this number to redeploy application
 
-performanceLimit:    ### -> https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-  enabled: false
+performanceLimit: ### -> https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  enabled: true
   memory:
     request: "512Mi"
-    max: "2048Mi"
+    max: "1024Mi"
   cpuTime:
     request: "200m"
     max: "1"
 
 imagePullSecret:
   # Use existing secret
-  existingSecret: ""
-  # OR provide credentials to generate one  
+  existingSecret: "secret-name-to-use"
+  # OR provide credentials to generate one
   server: "registry.chart.example"
   user: "user-chart-example"
   password: "3e9aafc8-429d-4450-a99f-1cba4adcbeac"
@@ -57,25 +57,24 @@ ingress:
   tls:
     enabled: true
   domains:
-  - url: "domain1.com"
-    secretName: domain1-cert-tls-secret
-  - url: "domain2.com"
-    #secretName: null = auto-generate-name
-  - url: "domain3.com"
-    secretName: domain3-cert-tls-secret
+    - url: "domain1.com"
+      secretName: domain1-cert-tls-secret
+    - url: "domain2.com"
+      #secretName: null = auto-generate-name
+    - url: "domain3.com"
+      secretName: domain3-cert-tls-secret
 
   ports:
-  - path: "/"
-    name: "web"
-    number: 8069
-  - path: "/websocket"
-    name: "secondary"
-    number: 8072
+    - path: "/websocket" # /websocket to odoo >= 16 or /longpolling
+      name: "secondary"
+      number: 8072
+    - path: "/"
+      name: "web"
+      number: 8069
   #- path: "/api"
   #  name: "apiexpose"
   #  number: 4000
-  ingressAnnotations:
-    {}
+  ingressAnnotations: {}
 
 persistence:
   enabled: false
