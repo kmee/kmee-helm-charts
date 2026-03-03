@@ -46,7 +46,6 @@ config:
   #ENV_8: "value_8"
   #ENV_9: "value_9"
 
-  
 ingress:
   enabled: true
   className: "nginx"
@@ -84,7 +83,7 @@ persistence:
 
 customStartScript:
   enabled: false
-  command: /bin/sh  ### or /bin/bash ; or /usr/local/bin/python ...
+  command: /bin/sh ### or /bin/bash ; or /usr/local/bin/python ...
   script: |
     #!/bin/sh
     set -x
@@ -95,7 +94,6 @@ customStartScript:
     command_5 &&
     command_6 &&
     /default/image/entrypoint || echo 'custom entrypoint script not work, sleeping ...' ;  sleep infinity
-
 
 ## full kubernetes yaml (support expand values)
 extraK8sYaml: {}

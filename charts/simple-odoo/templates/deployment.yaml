@@ -118,7 +118,7 @@ spec:
       {{ end }}
       {{- if .Values.customStartScript.enabled }}
       - name: init-script-volume
-        configMap: 
+        configMap:
           name: {{ .Release.Name }}-custom-start-script
       {{ end }}
       {{- if .Values.nodeSelector }}
