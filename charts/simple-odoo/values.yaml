@@ -62,18 +62,19 @@ ingress:
     - url: "domain1.com"
       secretName: domain1-cert-tls-secret
     - url: "domain2.com"
-      #secretName: null = auto-generate-name
+      # secretName: null = auto-generate-name
     - url: "domain3.com"
       secretName: domain3-cert-tls-secret
 
   ports:
-    - path: "/websocket" # /websocket to odoo >= 16 or /longpolling
+    # /websocket to odoo >= 16 or /longpolling
+    - path: "/websocket"
       name: "secondary"
       number: 8072
     - path: "/"
       name: "web"
       number: 8069
-  #- path: "/api"
+  # - path: "/api"
   #  name: "apiexpose"
   #  number: 4000
   ingressAnnotations: {}
@@ -81,13 +82,15 @@ ingress:
 persistence:
   enabled: false
   initVolume: false
-  storageClass: "local-path" ### k3s -> https://github.com/rancher/local-path-provisioner
+  ### k3s -> https://github.com/rancher/local-path-provisioner
+  storageClass: "local-path"
   accessMode: ReadWriteOnce
   size: 1Gi
 
 customStartScript:
   enabled: false
-  command: /bin/sh ### or /bin/bash ; or /usr/local/bin/python ...
+  ### or /bin/bash ; or /usr/local/bin/python ...
+  command: /bin/sh
   script: |
     #!/bin/sh
     set -x
