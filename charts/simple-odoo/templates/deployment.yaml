@@ -18,6 +18,10 @@ metadata:
     checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"
     {{- end }}
     checksum/environment: "{{ .Values.config | toYaml | sha256sum }}"
+  labels:
+    {{- if and .Values.autoRollout .Values.autoRollout.enabled }}
+    odoo.kmee.com.br: {{ .Release.Namespace | quote }}
+    {{- end }}
 {{ include "odoo.labels" . | indent 4 }}
 spec:
   strategy:
@@ -34,6 +38,9 @@ spec:
         app: {{ .Release.Name }}
         app.kubernetes.io/name: {{ include "odoo.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- if and .Values.autoRollout .Values.autoRollout.enabled }}
+        odoo.kmee.com.br: {{ .Release.Namespace | quote }}
+        {{- end }}
       annotations:
         {{- if .Values.customStartScript.enabled }}
         checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"

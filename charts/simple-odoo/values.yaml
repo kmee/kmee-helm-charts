@@ -8,6 +8,9 @@ image:
 updateStrategy:
   type: Recreate
 
+autoRollout:
+  enabled: true
+
 nodeSelector:
   enabled: false
   labelname: "kubernetes.io/hostname"
