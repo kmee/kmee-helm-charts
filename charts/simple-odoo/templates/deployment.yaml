@@ -18,6 +18,10 @@ metadata:
     checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"
     {{- end }}
     checksum/environment: "{{ .Values.config | toYaml | sha256sum }}"
+  labels:
+    {{- if and .Values.autoRollout .Values.autoRollout.enabled }}
+    odoo.kmee.com.br: {{ .Release.Namespace | quote }}
+    {{- end }}
 {{ include "odoo.labels" . | indent 4 }}
 spec:
   strategy:
@@ -34,6 +38,9 @@ spec:
         app: {{ .Release.Name }}
         app.kubernetes.io/name: {{ include "odoo.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- if and .Values.autoRollout .Values.autoRollout.enabled }}
+        odoo.kmee.com.br: {{ .Release.Namespace | quote }}
+        {{- end }}
       annotations:
         {{- if .Values.customStartScript.enabled }}
         checksum/custom-init-script: "{{ .Values.customStartScript.script | toYaml | sha256sum }}"
@@ -49,7 +56,8 @@ spec:
       {{- else if and .Values.imagePullSecret.user .Values.imagePullSecret.password }}
       imagePullSecrets:
         - name: {{ printf "%s-%s" (sha256sum (printf "%s%s" .Values.imagePullSecret.user .Values.imagePullSecret.password) | substr 0 16) .Release.Name | quote }}
-      {{- end }}      
+      {{- end }}
+      enableServiceLinks: false
       {{- if .Values.persistence.enabled }}
       {{- if .Values.persistence.initVolume }}
       initContainers:
@@ -118,7 +126,7 @@ spec:
       {{ end }}
       {{- if .Values.customStartScript.enabled }}
       - name: init-script-volume
-        configMap: 
+        configMap:
           name: {{ .Release.Name }}-custom-start-script
       {{ end }}
       {{- if .Values.nodeSelector }}

@@ -1,6 +1,9 @@
 apiVersion: v2
 name: simple-odoo
+maintainers:
+  - email: contato@kmee.com.br
+    name: kmee
 description: A Helm chart for odoo deploy (odoo only)
 type: application
-version: 1.0.5
+version: 1.0.6
 appVersion: "1.0.4"
