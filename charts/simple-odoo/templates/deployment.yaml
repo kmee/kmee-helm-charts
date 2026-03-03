@@ -56,7 +56,8 @@ spec:
       {{- else if and .Values.imagePullSecret.user .Values.imagePullSecret.password }}
       imagePullSecrets:
         - name: {{ printf "%s-%s" (sha256sum (printf "%s%s" .Values.imagePullSecret.user .Values.imagePullSecret.password) | substr 0 16) .Release.Name | quote }}
-      {{- end }}      
+      {{- end }}
+      enableServiceLinks: false
       {{- if .Values.persistence.enabled }}
       {{- if .Values.persistence.initVolume }}
       initContainers:
