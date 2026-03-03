@@ -1,8 +1,8 @@
 replicaCount: 1
 
 image:
-  repository: registry.chart.example/odoo/odoo
-  tag: "latest"
+  repository: docker.io/library/odoo
+  tag: "17.0"
   imagePullPolicy: IfNotPresent
 
 updateStrategy:
@@ -34,9 +34,9 @@ imagePullSecret:
   # Use existing secret
   existingSecret: "secret-name-to-use"
   # OR provide credentials to generate one
-  server: "registry.chart.example"
-  user: "user-chart-example"
-  password: "3e9aafc8-429d-4450-a99f-1cba4adcbeac"
+  # server: "registry.chart.example"
+  # user: "user-chart-example"
+  # password: "3e9aafc8-429d-4450-a99f-1cba4adcbeac"
 
 ### environment
 config:
