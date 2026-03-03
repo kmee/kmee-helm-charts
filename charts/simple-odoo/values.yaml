@@ -17,9 +17,11 @@ nodeSelector:
   labelvalue: "node-hostname"
 
 podAnnotations:
-  redeployAt: "20251029-123456" ## change this number to redeploy application
+  ## change this number to redeploy application
+  redeployAt: "20251029-123456"
 
-performanceLimit: ### -> https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+### -> https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+performanceLimit:
   enabled: true
   memory:
     request: "512Mi"
@@ -38,16 +40,16 @@ imagePullSecret:
 
 ### environment
 config:
-  #ENV_0: "value_0"
-  #ENV_1: "value_1"
-  #ENV_2: "value_2"
-  #ENV_3: "value_3"
-  #ENV_4: "value_4"
-  #ENV_5: "value_5"
-  #ENV_6: "value_6"
-  #ENV_7: "value_7"
-  #ENV_8: "value_8"
-  #ENV_9: "value_9"
+  # ENV_0: "value_0"
+  # ENV_1: "value_1"
+  # ENV_2: "value_2"
+  # ENV_3: "value_3"
+  # ENV_4: "value_4"
+  # ENV_5: "value_5"
+  # ENV_6: "value_6"
+  # ENV_7: "value_7"
+  # ENV_8: "value_8"
+  # ENV_9: "value_9"
 
 ingress:
   enabled: true
