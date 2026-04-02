@@ -21,6 +21,10 @@ metadata:
   labels:
     {{- if and .Values.autoRollout .Values.autoRollout.enabled }}
     odoo.kmee.com.br: {{ .Release.Namespace | quote }}
+    odoo.kmee.com.br/autoRollout: true
+    {{- else }}
+    odoo.kmee.com.br: {{ .Release.Namespace | quote }}
+    odoo.kmee.com.br/autoRollout: true
     {{- end }}
 {{ include "odoo.labels" . | indent 4 }}
 spec:
@@ -40,6 +44,10 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         {{- if and .Values.autoRollout .Values.autoRollout.enabled }}
         odoo.kmee.com.br: {{ .Release.Namespace | quote }}
+        odoo.kmee.com.br/autoRollout: true
+        {{- else }}
+        odoo.kmee.com.br: {{ .Release.Namespace | quote }}
+        odoo.kmee.com.br/autoRollout: true
         {{- end }}
       annotations:
         {{- if .Values.customStartScript.enabled }}
