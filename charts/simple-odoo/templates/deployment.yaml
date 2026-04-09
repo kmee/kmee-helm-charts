@@ -23,8 +23,7 @@ metadata:
     odoo.kmee.com.br: {{ .Release.Namespace | quote }}
     odoo.kmee.com.br/autoRollout: "true"
     {{- else }}
-    odoo.kmee.com.br: {{ .Release.Namespace | quote }}
-    odoo.kmee.com.br/autoRollout: "true"
+    odoo.kmee.com.br/autoRollout: "false"
     {{- end }}
 {{ include "odoo.labels" . | indent 4 }}
 spec:
@@ -46,8 +45,7 @@ spec:
         odoo.kmee.com.br: {{ .Release.Namespace | quote }}
         odoo.kmee.com.br/autoRollout: "true"
         {{- else }}
-        odoo.kmee.com.br: {{ .Release.Namespace | quote }}
-        odoo.kmee.com.br/autoRollout: "true"
+        odoo.kmee.com.br/autoRollout: "false"
         {{- end }}
       annotations:
         {{- if .Values.customStartScript.enabled }}
