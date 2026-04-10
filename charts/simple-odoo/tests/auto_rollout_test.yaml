@@ -1,0 +1,36 @@
+suite: autoRollout label tests
+templates:
+  - deployment.yaml
+tests:
+  - it: should set autoRollout label to "true" on deployment and pod when autoRollout.enabled is true
+    set:
+      autoRollout.enabled: true
+    asserts:
+      - equal:
+          path: metadata.labels["odoo.kmee.com.br/autoRollout"]
+          value: "true"
+      - equal:
+          path: spec.template.metadata.labels["odoo.kmee.com.br/autoRollout"]
+          value: "true"
+
+  - it: should set autoRollout label to "false" on deployment and pod when autoRollout.enabled is false
+    set:
+      autoRollout.enabled: false
+    asserts:
+      - equal:
+          path: metadata.labels["odoo.kmee.com.br/autoRollout"]
+          value: "false"
+      - equal:
+          path: spec.template.metadata.labels["odoo.kmee.com.br/autoRollout"]
+          value: "false"
+
+  - it: should set autoRollout label to "false" on deployment and pod when autoRollout is not set
+    set:
+      autoRollout: null
+    asserts:
+      - equal:
+          path: metadata.labels["odoo.kmee.com.br/autoRollout"]
+          value: "false"
+      - equal:
+          path: spec.template.metadata.labels["odoo.kmee.com.br/autoRollout"]
+          value: "false"
