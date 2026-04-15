@@ -32,7 +32,7 @@ performanceLimit:
 
 imagePullSecret:
   # Use existing secret
-  existingSecret: "secret-name-to-use"
+  existingSecret: ""
   # OR provide credentials to generate one
   # server: "registry.chart.example"
   # user: "user-chart-example"

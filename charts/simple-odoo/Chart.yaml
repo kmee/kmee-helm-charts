@@ -5,5 +5,5 @@ maintainers:
     name: kmee
 description: A Helm chart for odoo deploy (odoo only)
 type: application
-version: 1.0.8
-appVersion: "1.0.4"
+version: 1.0.9
+appVersion: "16.0"

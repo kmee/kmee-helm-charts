@@ -1,0 +1,25 @@
+suite: ingress class tests
+templates:
+  - ingress.yaml
+tests:
+  - it: should use nginx as default ingressClassName
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: "nginx"
+
+  - it: should use appsec-nginx when ingress.className is set to appsec-nginx
+    set:
+      ingress.className: "appsec-nginx"
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: "appsec-nginx"
+
+  - it: should use any custom ingressClassName when set
+    set:
+      ingress.className: "traefik"
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: "traefik"
