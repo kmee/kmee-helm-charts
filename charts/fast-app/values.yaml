@@ -12,7 +12,7 @@ fullnameOverride: ""
 replicaCount: 1
 
 image:
-  repository: kmee/brcode:latest
+  repository: kmee/brcode
   tag: "latest"          # equivale ao image:latest do compose
   pullPolicy: IfNotPresent
 

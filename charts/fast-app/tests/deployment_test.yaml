@@ -12,7 +12,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: "kmee/brcode:latest:latest"
+          value: "kmee/brcode:latest"
 
 
   - it: should expose configured containerPort
