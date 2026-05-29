@@ -1,0 +1,140 @@
+# ==============================================================================
+# fastapi-app — valores padrão
+#
+# Para cada aplicação FastAPI, copie este arquivo (ex.: values-gateway.yaml)
+# e sobrescreva apenas o que mudar. Tudo aqui tem um default seguro.
+# ==============================================================================
+
+# Número de réplicas (ignorado se autoscaling.enabled = true)
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+
+image:
+  repository: kmee/brcode:latest
+  tag: "latest"          # equivale ao image:latest do compose
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []      # ex.: [{ name: registry-cred }]
+
+# Nome da app dentro do container / porta que o FastAPI escuta (uvicorn)
+containerPort: 5057
+
+service:
+  type: ClusterIP
+  # Porta exposta pelo Service. No compose era 8800 -> mapeie aqui se quiser.
+  port: 8800
+  # Porta do container para onde o tráfego é encaminhado.
+  targetPort: 5057
+
+# ------------------------------------------------------------------------------
+# Variáveis de ambiente (substitui o env_file: .env do compose)
+# ------------------------------------------------------------------------------
+# Valores NÃO sensíveis -> viram um ConfigMap
+env: {}
+  # LOG_LEVEL: info
+  # WORKERS: "4"
+
+# Valores sensíveis -> viram um Secret (use --set-string ou um values privado)
+secretEnv: {}
+  # API_TOKEN: "xxxx"
+  # DATABASE_URL: "postgres://..."
+
+# Referenciar Secrets/ConfigMaps já existentes no cluster (não criados pelo chart)
+envFrom: []
+  # - secretRef:
+  #     name: gateway-existing-secret
+  # - configMapRef:
+  #     name: gateway-existing-config
+
+# ------------------------------------------------------------------------------
+# Health checks (substitui o healthcheck do compose -> GET /health)
+# ------------------------------------------------------------------------------
+healthCheck:
+  enabled: true
+  path: /health
+  liveness:
+    initialDelaySeconds: 10   # = start_period
+    periodSeconds: 30         # = interval
+    timeoutSeconds: 5         # = timeout
+    failureThreshold: 3       # = retries
+  readiness:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+# ------------------------------------------------------------------------------
+# Recursos / escalonamento
+# ------------------------------------------------------------------------------
+resources: {}
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # limits:
+  #   cpu: 500m
+  #   memory: 512Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# ------------------------------------------------------------------------------
+# Ingress (opcional)
+# ------------------------------------------------------------------------------
+ingress:
+  enabled: false
+  className: nginx
+  annotations:
+    # Tamanho máximo do corpo da requisição (0 = sem limite)
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    # Timeouts (útil para chamadas mais longas da API)
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    # TLS automático com cert-manager (descomente se usar)
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # Redireciona HTTP -> HTTPS (ative quando tiver TLS)
+    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: barcode.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+    # - secretName: barcode-tls
+    #   hosts:
+    #     - gateway.local
+
+# ------------------------------------------------------------------------------
+# Diversos
+# ------------------------------------------------------------------------------
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+podAnnotations: {}
+podLabels: {}
+
+# Segurança (boas práticas; ajuste se a imagem exigir root)
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Extras opcionais
+extraVolumes: []
+extraVolumeMounts: []
