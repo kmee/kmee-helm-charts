@@ -1,6 +1,6 @@
 image:
-  repository: nginx
-  tag: alpine
+  repository: tiangolo/uvicorn-gunicorn-fastapi
+  tag: python3.11-slim
   pullPolicy: IfNotPresent
 
 containerPort: 80
