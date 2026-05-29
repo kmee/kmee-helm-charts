@@ -1,0 +1,32 @@
+suite: ingress tests
+templates:
+  - ingress.yaml
+tests:
+  - it: should not render ingress by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render ingress when enabled
+    set:
+      ingress.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: should use nginx as default ingressClassName
+    set:
+      ingress.enabled: true
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
+
+  - it: should use custom ingressClassName when set
+    set:
+      ingress.enabled: true
+      ingress.className: traefik
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: traefik

@@ -1,0 +1,41 @@
+suite: deployment tests
+templates:
+  - deployment.yaml
+tests:
+  - it: should have default replica count
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 1
+
+  - it: should use configured image
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: "kmee/brcode:latest"
+
+
+  - it: should expose configured containerPort
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].ports[0].containerPort
+          value: 5057
+
+  - it: should not set replicas when autoscaling enabled
+    set:
+      autoscaling.enabled: true
+    asserts:
+      - notExists:
+          path: spec.replicas
+
+  - it: should have liveness probe when healthCheck enabled
+    asserts:
+      - exists:
+          path: spec.template.spec.containers[0].livenessProbe
+
+  - it: should not have liveness probe when healthCheck disabled
+    set:
+      healthCheck.enabled: false
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].livenessProbe

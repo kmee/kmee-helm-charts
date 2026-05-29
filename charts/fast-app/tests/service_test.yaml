@@ -1,0 +1,23 @@
+suite: service tests
+templates:
+  - service.yaml
+tests:
+  - it: should be ClusterIP by default
+    asserts:
+      - equal:
+          path: spec.type
+          value: ClusterIP
+
+  - it: should expose configured port
+    asserts:
+      - equal:
+          path: spec.ports[0].port
+          value: 8800
+
+  - it: should use custom service type when set
+    set:
+      service.type: LoadBalancer
+    asserts:
+      - equal:
+          path: spec.type
+          value: LoadBalancer
