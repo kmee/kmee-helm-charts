@@ -45,6 +45,7 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         uses: d3adb5/helm-unittest-action@v2
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           charts: |
             ${{ steps.list-changed.outputs.charts }}
 
