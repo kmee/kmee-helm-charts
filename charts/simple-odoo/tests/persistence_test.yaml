@@ -1,0 +1,87 @@
+suite: persistence tests
+templates:
+  - pvc.yaml
+  - deployment.yaml
+tests:
+  - it: should create PVC when persistence.enabled and no existingClaim
+    templates:
+      - pvc.yaml
+    set:
+      persistence.enabled: true
+      persistence.storageClass: "local-path"
+      persistence.accessMode: ReadWriteOnce
+      persistence.size: 8Gi
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PersistentVolumeClaim
+      - equal:
+          path: spec.storageClassName
+          value: "local-path"
+      - equal:
+          path: spec.resources.requests.storage
+          value: "8Gi"
+
+  - it: should NOT create PVC when existingClaim is set
+    templates:
+      - pvc.yaml
+    set:
+      persistence.enabled: true
+      persistence.existingClaim: "my-existing-pvc"
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should use existingClaim name in deployment volume when set
+    templates:
+      - deployment.yaml
+    set:
+      persistence.enabled: true
+      persistence.existingClaim: "my-existing-pvc"
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[0].persistentVolumeClaim.claimName
+          value: "my-existing-pvc"
+
+  - it: should use generated PVC name in deployment when existingClaim is empty
+    templates:
+      - deployment.yaml
+    set:
+      persistence.enabled: true
+      persistence.existingClaim: ""
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.volumes[0].persistentVolumeClaim.claimName
+          pattern: ".*-pvc$"
+
+  - it: should not create PVC when persistence.enabled is false
+    templates:
+      - pvc.yaml
+    set:
+      persistence.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: volume-init container should have runAsUser 0 to allow chown
+    templates:
+      - deployment.yaml
+    set:
+      persistence.enabled: true
+      persistence.initVolume: true
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].securityContext.runAsUser
+          value: 0
+
+  - it: should NOT run volume-init initContainer when existingClaim is set
+    templates:
+      - deployment.yaml
+    set:
+      persistence.enabled: true
+      persistence.initVolume: true
+      persistence.existingClaim: "my-existing-pvc"
+    asserts:
+      - isNull:
+          path: spec.template.spec.initContainers

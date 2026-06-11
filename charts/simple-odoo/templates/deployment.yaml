@@ -64,12 +64,13 @@ spec:
         - name: {{ printf "%s-%s" (sha256sum (printf "%s%s" .Values.imagePullSecret.user .Values.imagePullSecret.password) | substr 0 16) .Release.Name | quote }}
       {{- end }}
       enableServiceLinks: false
-      {{- if .Values.persistence.enabled }}
-      {{- if .Values.persistence.initVolume }}
+      {{- if and .Values.persistence.enabled .Values.persistence.initVolume (not .Values.persistence.existingClaim) }}
       initContainers:
         - name: volume-init
           image: busybox
           command: ['sh', '-c', 'chown 1000:1000 -R /odoo']
+          securityContext:
+            runAsUser: 0
           resources:
             requests:
               cpu: "50m"
@@ -80,7 +81,6 @@ spec:
           volumeMounts:
           - name: odoo
             mountPath: /odoo
-      {{- end }}
       {{- end }}
       containers:
         - name: {{ include "odoo.fullname" . }}-container
@@ -128,7 +128,7 @@ spec:
       {{ if .Values.persistence.enabled }}
       - name: odoo
         persistentVolumeClaim:
-          claimName: {{ include "odoo.fullname" . }}-pvc
+          claimName: {{ .Values.persistence.existingClaim | default (printf "%s-pvc" (include "odoo.fullname" .)) }}
       {{ end }}
       {{- if .Values.customStartScript.enabled }}
       - name: init-script-volume
