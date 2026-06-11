@@ -82,6 +82,7 @@ ingress:
 persistence:
   enabled: false
   initVolume: false
+  existingClaim: ""
   ### k3s -> https://github.com/rancher/local-path-provisioner
   storageClass: "local-path"
   accessMode: ReadWriteOnce
