@@ -63,6 +63,10 @@ spec:
       imagePullSecrets:
         - name: {{ printf "%s-%s" (sha256sum (printf "%s%s" .Values.imagePullSecret.user .Values.imagePullSecret.password) | substr 0 16) .Release.Name | quote }}
       {{- end }}
+      {{- if and .Values.persistence.enabled .Values.persistence.fsGroup }}
+      securityContext:
+        fsGroup: {{ .Values.persistence.fsGroup }}
+      {{- end }}
       enableServiceLinks: false
       {{- if and .Values.persistence.enabled .Values.persistence.initVolume (not .Values.persistence.existingClaim) }}
       initContainers:

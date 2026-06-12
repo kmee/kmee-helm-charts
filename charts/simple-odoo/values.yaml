@@ -83,6 +83,7 @@ persistence:
   enabled: false
   initVolume: false
   existingClaim: ""
+  fsGroup: 1000
   ### k3s -> https://github.com/rancher/local-path-provisioner
   storageClass: "local-path"
   accessMode: ReadWriteOnce
