@@ -78,6 +78,26 @@ tests:
           path: spec.template.spec.initContainers[0].securityContext.capabilities.add
           content: CHOWN
 
+  - it: should set pod-level fsGroup when persistence.enabled and fsGroup defined
+    templates:
+      - deployment.yaml
+    set:
+      persistence.enabled: true
+      persistence.fsGroup: 1000
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.fsGroup
+          value: 1000
+
+  - it: should NOT set fsGroup when persistence.enabled is false
+    templates:
+      - deployment.yaml
+    set:
+      persistence.enabled: false
+    asserts:
+      - isNull:
+          path: spec.template.spec.securityContext.fsGroup
+
   - it: should NOT run volume-init initContainer when existingClaim is set
     templates:
       - deployment.yaml
