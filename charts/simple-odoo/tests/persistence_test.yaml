@@ -74,6 +74,9 @@ tests:
       - equal:
           path: spec.template.spec.initContainers[0].securityContext.runAsUser
           value: 0
+      - contains:
+          path: spec.template.spec.initContainers[0].securityContext.capabilities.add
+          content: CHOWN
 
   - it: should NOT run volume-init initContainer when existingClaim is set
     templates:

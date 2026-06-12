@@ -71,6 +71,9 @@ spec:
           command: ['sh', '-c', 'chown 1000:1000 -R /odoo']
           securityContext:
             runAsUser: 0
+            capabilities:
+              add:
+                - CHOWN
           resources:
             requests:
               cpu: "50m"
