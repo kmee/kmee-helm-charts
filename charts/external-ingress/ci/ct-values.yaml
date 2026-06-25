@@ -1,0 +1,12 @@
+internalip: "10.0.0.1"
+internalport: 80
+
+ingress:
+  className: nginx
+  clusterIssuer: letsencrypt-prod
+  hosts:
+    - url: "example.internal"
+  tls:
+    enabled: false
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 5000m

@@ -1,0 +1,38 @@
+suite: service tests
+templates:
+  - service.yaml
+tests:
+  - it: should render service
+    set:
+      internalip: "10.0.0.1"
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: should use default port 80
+    set:
+      internalip: "10.0.0.1"
+    asserts:
+      - equal:
+          path: spec.ports[0].port
+          value: 80
+
+  - it: should use configured port
+    set:
+      internalip: "10.0.0.1"
+      internalport: 8080
+    asserts:
+      - equal:
+          path: spec.ports[0].port
+          value: 8080
+      - equal:
+          path: spec.ports[0].targetPort
+          value: 8080
+
+  - it: should have release-scoped name
+    set:
+      internalip: "10.0.0.1"
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-external-ingress-service
