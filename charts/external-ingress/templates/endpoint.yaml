@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Endpoints
 metadata:
-  name: {{ .Chart.Name }}-service
+  name: {{ include "external-ingress.serviceName" . }}
   labels:
-    app: {{ .Chart.Name }}
+    {{- include "external-ingress.labels" . | nindent 4 }}
 subsets:
 - addresses:
   - ip: {{ .Values.internalip }}
   ports:
-  - name: {{ .Chart.Name }}-port
-    port: {{ .Values.internalport }}
+  - name: {{ include "external-ingress.fullname" . }}-port
+    port: {{ .Values.internalport | int }}
     protocol: TCP

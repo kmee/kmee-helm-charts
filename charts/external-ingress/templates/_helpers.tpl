@@ -42,3 +42,8 @@ app.kubernetes.io/name: {{ include "external-ingress.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app: {{ include "external-ingress.fullname" . }}
 {{- end }}
+
+{{/* Service name shared by Service, Endpoints and Ingress backend */}}
+{{- define "external-ingress.serviceName" -}}
+{{- printf "%s-service" (include "external-ingress.fullname" .) }}
+{{- end }}

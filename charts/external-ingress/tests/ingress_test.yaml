@@ -1,0 +1,142 @@
+suite: ingress tests
+templates:
+  - ingress.yaml
+tests:
+  - it: should render ingress with configured host
+    set:
+      internalip: "10.0.0.1"
+      ingress.hosts[0].url: "example.com"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.rules[0].host
+          value: "example.com"
+
+  - it: should use nginx as default ingressClassName
+    set:
+      internalip: "10.0.0.1"
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
+
+  - it: should use custom ingressClassName when set
+    set:
+      internalip: "10.0.0.1"
+      ingress.className: traefik
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: traefik
+
+  - it: should render TLS section when enabled
+    set:
+      internalip: "10.0.0.1"
+      ingress.tls.enabled: true
+      ingress.hosts[0].url: "example.com"
+    asserts:
+      - exists:
+          path: spec.tls
+      - equal:
+          path: spec.tls[0].hosts[0]
+          value: "example.com"
+
+  - it: should not render TLS section when disabled
+    set:
+      internalip: "10.0.0.1"
+      ingress.tls.enabled: false
+    asserts:
+      - notExists:
+          path: spec.tls
+
+  - it: should add TLS cert-manager annotations when TLS enabled
+    set:
+      internalip: "10.0.0.1"
+      ingress.tls.enabled: true
+    asserts:
+      - equal:
+          path: metadata.annotations["kubernetes.io/tls-acme"]
+          value: "true"
+      - equal:
+          path: metadata.annotations["cert-manager.io/cluster-issuer"]
+          value: letsencrypt-prod
+
+  - it: should use custom clusterIssuer when set
+    set:
+      internalip: "10.0.0.1"
+      ingress.tls.enabled: true
+      ingress.clusterIssuer: letsencrypt-staging
+    asserts:
+      - equal:
+          path: metadata.annotations["cert-manager.io/cluster-issuer"]
+          value: letsencrypt-staging
+
+  - it: should add whitelist annotation when whitelistIPs enabled
+    set:
+      internalip: "10.0.0.1"
+      whitelistIPs.enabled: true
+      whitelistIPs.ips:
+        - "192.168.1.0/24"
+        - "10.0.0.1/32"
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/whitelist-source-range"]
+          value: "192.168.1.0/24,10.0.0.1/32"
+
+  - it: should not add whitelist annotation when whitelistIPs disabled
+    set:
+      internalip: "10.0.0.1"
+      whitelistIPs.enabled: false
+    asserts:
+      - notExists:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/whitelist-source-range"]
+
+  - it: should add basic auth annotations when httpAuth enabled
+    set:
+      internalip: "10.0.0.1"
+      httpAuth.enabled: true
+      httpAuth.secretName: "my-auth-secret"
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/auth-type"]
+          value: basic
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/auth-secret"]
+          value: my-auth-secret
+
+  - it: should not add basic auth annotations when httpAuth disabled
+    set:
+      internalip: "10.0.0.1"
+      httpAuth.enabled: false
+    asserts:
+      - notExists:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/auth-type"]
+
+  - it: should route to release-scoped service in backend
+    set:
+      internalip: "10.0.0.1"
+      ingress.hosts[0].url: "example.com"
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.name
+          value: RELEASE-NAME-external-ingress-service
+
+  - it: should use configured port in backend
+    set:
+      internalip: "10.0.0.1"
+      internalport: 8080
+      ingress.hosts[0].url: "example.com"
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.number
+          value: 8080
+
+  - it: should use path type ImplementationSpecific
+    set:
+      internalip: "10.0.0.1"
+      ingress.hosts[0].url: "example.com"
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].pathType
+          value: ImplementationSpecific

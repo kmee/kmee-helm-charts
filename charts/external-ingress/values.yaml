@@ -1,5 +1,5 @@
 internalip: ""
-internalport: "80"
+internalport: 80
 
 ## gere usando:
 # ->  echo 'senha' | htpasswd -i -BC 12 -n 'user' | base64 -w 0
@@ -14,6 +14,8 @@ whitelistIPs:
   ips: []
 
 ingress:
+  className: nginx
+  clusterIssuer: letsencrypt-prod
   hosts:
     - url: ""
   tls:
