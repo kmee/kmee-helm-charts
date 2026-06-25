@@ -1,0 +1,5 @@
+apiVersion: v2
+name: external-ingress
+description: Nginx ingress proxy to a service running in another cluster via internal IP
+version: 1.0.0
+appVersion: "1.0.0"

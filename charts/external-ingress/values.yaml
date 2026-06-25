@@ -1,0 +1,28 @@
+internalip: ""
+internalport: "80"
+
+## gere usando:
+# ->  echo 'senha' | htpasswd -i -BC 12 -n 'user' | base64 -w 0
+#     (despreze o # ao final, se houver)
+httpAuth:
+  enabled: false
+  secretName: ""
+  secretOpaque: ""
+
+whitelistIPs:
+  enabled: false
+  ips: []
+
+ingress:
+  hosts:
+    - url: ""
+  tls:
+    enabled: true
+  annotations:
+    {
+      nginx.ingress.kubernetes.io/proxy-body-size: 5000m,
+      nginx.ingress.kubernetes.io/proxy-connect-timeout: "30000",
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "30000",
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "30000",
+      nginx.ingress.kubernetes.io/use-forwarded-headers: "true",
+    }

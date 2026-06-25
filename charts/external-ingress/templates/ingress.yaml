@@ -1,0 +1,45 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}-ingress
+  annotations:
+  {{- if and .Values.httpAuth .Values.httpAuth.enabled }}
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-realm: 'need login'
+    nginx.ingress.kubernetes.io/auth-secret: {{ .Values.httpAuth.secretName }}
+  {{- end }}
+  {{- if and .Values.ingress.tls .Values.ingress.tls.enabled }}
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  {{- end }}
+  {{- if and .Values.whitelistIPs .Values.whitelistIPs.enabled }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ range $index, $ip := .Values.whitelistIPs.ips }}{{ if $index }},{{ end }}{{ $ip }}{{ end }}
+  {{- end }}
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+{{- if and .Values.ingress.tls .Values.ingress.tls.enabled }}
+  tls:
+  {{- range .Values.ingress.hosts }}
+    - hosts:
+        - {{ .url }}
+      secretName: {{ replace "." "-" (printf "%s--%s" .url "tls-secret") }}
+  {{- end }}
+{{- end }}
+  ingressClassName: nginx
+  rules:
+  {{- range .Values.ingress.hosts }}
+  - host: {{ .url }}
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ $.Chart.Name }}-service
+            port:
+              number: {{ $.Values.internalport }}
+  {{- end }}

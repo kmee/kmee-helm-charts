@@ -1,0 +1,9 @@
+{{- if and .Values.httpAuth .Values.httpAuth.enabled }}
+apiVersion: v1
+data:
+  auth: {{ .Values.httpAuth.secretOpaque }}
+kind: Secret
+metadata:
+  name: {{ .Values.httpAuth.secretName }}
+type: Opaque
+{{- end }}
