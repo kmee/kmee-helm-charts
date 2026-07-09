@@ -1,0 +1,27 @@
+{{- if and .Values.ingress.enabled (eq .Values.ingress.type "gateway-api") }}
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: {{ .Release.Name }}-httproute
+  annotations:
+    checksum/httproute: "{{ .Values.ingress | toYaml | sha256sum }}"
+spec:
+  parentRefs:
+  - name: {{ .Values.ingress.gatewayApi.gatewayName }}
+    namespace: {{ .Values.ingress.gatewayApi.gatewayNamespace }}
+    sectionName: {{ .Values.ingress.gatewayApi.listenerName }}
+  hostnames:
+  {{- range .Values.ingress.domains }}
+  - {{ .url }}
+  {{- end }}
+  rules:
+  {{- range .Values.ingress.ports }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: {{ .path }}
+    backendRefs:
+    - name: {{ $.Release.Name }}-service
+      port: {{ .number }}
+  {{- end }}
+{{- end }}

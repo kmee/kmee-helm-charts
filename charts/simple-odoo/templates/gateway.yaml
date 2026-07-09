@@ -1,0 +1,31 @@
+{{- if and .Values.ingress.enabled (eq .Values.ingress.type "gateway-api") .Values.ingress.gatewayApi.createGateway }}
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ .Values.ingress.gatewayApi.gatewayName }}
+  namespace: {{ .Values.ingress.gatewayApi.gatewayNamespace }}
+spec:
+  gatewayClassName: nginx
+  listeners:
+  - name: {{ .Values.ingress.gatewayApi.listenerName }}
+    protocol: HTTP
+    port: {{ .Values.ingress.gatewayApi.listenerPort }}
+    allowedRoutes:
+      namespaces:
+        from: All
+{{- if .Values.ingress.tls.enabled }}
+  - name: https
+    protocol: HTTPS
+    port: 443
+    tls:
+      mode: Terminate
+      certificateRefs:
+      {{- range .Values.ingress.domains }}
+      - name: {{ default (replace "." "-" (printf "%s-tls-secret" .url)) .secretName }}
+        namespace: {{ $.Release.Namespace }}
+      {{- end }}
+    allowedRoutes:
+      namespaces:
+        from: All
+{{- end }}
+{{- end }}

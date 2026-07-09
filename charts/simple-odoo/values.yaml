@@ -53,6 +53,7 @@ config:
 
 ingress:
   enabled: true
+  type: "ingress"  # "ingress" or "gateway-api"
   className: "nginx"
   wwwNginxRedirect: true
   recommendedNginxSettings: true
@@ -77,7 +78,20 @@ ingress:
   # - path: "/api"
   #  name: "apiexpose"
   #  number: 4000
-  ingressAnnotations: {}
+  annotations: {}
+
+  # Gateway API (nginx-gateway-fabric) settings
+  gatewayApi:
+    # Create Gateway resource (if not already existing in cluster)
+    createGateway: false
+    # Listener name in Gateway resource
+    listenerName: "http"
+    # Listener port (typically 80 or 443)
+    listenerPort: 80
+    # Gateway namespace (where Gateway is deployed)
+    gatewayNamespace: "nginx-gateway"
+    # Gateway name
+    gatewayName: "nginx-gateway"
 
 persistence:
   enabled: false
