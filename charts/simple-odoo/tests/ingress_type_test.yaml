@@ -1,0 +1,32 @@
+suite: ingress type conditional tests
+templates:
+  - ingress.yaml
+tests:
+  - it: should render Ingress when type is ingress
+    set:
+      ingress.type: "ingress"
+    asserts:
+      - isKind:
+          of: Ingress
+
+  - it: should not render Ingress when type is gateway-api
+    set:
+      ingress.type: "gateway-api"
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should fail when type is invalid
+    set:
+      ingress.type: "invalid-type"
+    asserts:
+      - failedTemplate: {}
+
+  - it: should render Ingress with nginx class
+    set:
+      ingress.type: "ingress"
+      ingress.className: "nginx"
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: "nginx"

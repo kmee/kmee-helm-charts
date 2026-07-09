@@ -1,26 +1,26 @@
 {{- if .Values.ingress.enabled }}
-  {{- $validPorts := false -}}
-  {{- $validDomains := false -}}
-
-  {{- range .Values.ingress.ports }}
-    {{- if and .path .name .number }}
-      {{- $validPorts = true -}}
-    {{- end }}
-  {{- end }}
-
-  {{- range .Values.ingress.domains }}
-    {{- if .url }}
-      {{- $validDomains = true -}}
-    {{- end }}
-  {{- end }}
-
-  {{- if not $validPorts }}
-    {{ fail "At least one port must have valid 'path', 'name', and 'number' fields" }}
-  {{- end }}
-
-  {{- if not $validDomains }}
-    {{ fail "At least one domain must have a valid 'url'" }}
-  {{- end }}
+{{- if and (ne .Values.ingress.type "ingress") (ne .Values.ingress.type "gateway-api") }}
+{{ fail "ingress.type must be 'ingress' or 'gateway-api'" }}
+{{- end }}
+{{- $validPorts := false -}}
+{{- $validDomains := false -}}
+{{- range .Values.ingress.ports }}
+{{- if and .path .name .number }}
+{{- $validPorts = true }}
+{{- end }}
+{{- end }}
+{{- range .Values.ingress.domains }}
+{{- if .url }}
+{{- $validDomains = true }}
+{{- end }}
+{{- end }}
+{{- if not $validPorts }}
+{{ fail "At least one port must have valid 'path', 'name', and 'number' fields" }}
+{{- end }}
+{{- if not $validDomains }}
+{{ fail "At least one domain must have a valid 'url'" }}
+{{- end }}
+{{- if eq .Values.ingress.type "ingress" }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -65,5 +65,6 @@ spec:
         - {{ .url }}
       secretName: {{ default ( replace "." "-" (printf "%s--%s" .url "tls-secret")) .secretName }}
       {{- end }}
+  {{- end }}
   {{- end }}
 {{- end }}

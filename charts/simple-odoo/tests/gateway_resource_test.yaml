@@ -1,0 +1,63 @@
+suite: gateway resource tests
+templates:
+  - gateway.yaml
+tests:
+  - it: should not render Gateway when createGateway is false
+    set:
+      ingress.type: "gateway-api"
+      ingress.gatewayApi.createGateway: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render Gateway when createGateway is true
+    set:
+      ingress.type: "gateway-api"
+      ingress.gatewayApi.createGateway: true
+      ingress.gatewayApi.gatewayName: "nginx-gateway"
+      ingress.gatewayApi.gatewayNamespace: "nginx-gateway"
+    asserts:
+      - isKind:
+          of: Gateway
+      - equal:
+          path: metadata.name
+          value: "nginx-gateway"
+      - equal:
+          path: metadata.namespace
+          value: "nginx-gateway"
+
+  - it: should configure Gateway with HTTP listener
+    set:
+      ingress.type: "gateway-api"
+      ingress.gatewayApi.createGateway: true
+      ingress.gatewayApi.listenerName: "http"
+      ingress.gatewayApi.listenerPort: 80
+    asserts:
+      - equal:
+          path: spec.gatewayClassName
+          value: "nginx"
+      - equal:
+          path: spec.listeners[0].name
+          value: "http"
+      - equal:
+          path: spec.listeners[0].protocol
+          value: "HTTP"
+      - equal:
+          path: spec.listeners[0].port
+          value: 80
+
+  - it: should configure HTTPS listener when tls is enabled
+    set:
+      ingress.type: "gateway-api"
+      ingress.gatewayApi.createGateway: true
+      ingress.tls.enabled: true
+    asserts:
+      - equal:
+          path: spec.listeners[1].name
+          value: "https"
+      - equal:
+          path: spec.listeners[1].protocol
+          value: "HTTPS"
+      - equal:
+          path: spec.listeners[1].port
+          value: 443
