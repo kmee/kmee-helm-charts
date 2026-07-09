@@ -5,10 +5,10 @@ entries:
       category: Infrastructure
     apiVersion: v2
     appVersion: 1.10.0
-    created: "2026-06-25T13:53:50.634873436Z"
+    created: "2026-07-09T09:31:09.90114839Z"
     description: A Library Helm Chart for grouping common logic between bitnami charts.
       This chart is not deployable by itself.
-    digest: 46cc50c8922c2acf08f44d95b854ddc6749449d34ba59212da1a6ef10348405b
+    digest: 6d9de12ddd50d82660381eb2b7081ba64477da393f905558fd5e14ef80fa2609
     home: https://github.com/bitnami/charts/tree/master/bitnami/common
     icon: https://bitnami.com/downloads/logos/bitnami-mark.png
     keywords:
@@ -31,9 +31,9 @@ entries:
   etherpad:
   - apiVersion: v2
     appVersion: 1.8.1
-    created: "2026-06-25T13:53:50.635265563Z"
+    created: "2026-07-09T09:31:09.901767911Z"
     description: A Helm chart for Etherpad
-    digest: 53877905954715c4d2059181287b464343f8ae388088d4e47481b3df68d21a2c
+    digest: efaf16a435f448c0260a44863615d95869ad25235a48987c9b8865339c79e768
     icon: https://etherpad.org/img/brand.svg
     name: etherpad
     type: application
@@ -43,10 +43,10 @@ entries:
   external-ingress:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-06-25T13:53:50.635549182Z"
+    created: "2026-07-09T09:31:09.902113668Z"
     description: Nginx ingress proxy to a service running in another cluster via internal
       IP
-    digest: 795e4a5841833b3c6df639e897b7b5069db10402e3541beb3df684f42b21706a
+    digest: 74055f1ab17b76075fde016739e256a99a3bd2a808c5c7eaf34463bb682be50c
     maintainers:
     - email: contato@kmee.com.br
       name: KMEE
@@ -57,10 +57,10 @@ entries:
   fastapi-app:
   - apiVersion: v2
     appVersion: latest
-    created: "2026-06-25T13:53:50.636027719Z"
+    created: "2026-07-09T09:31:09.902636298Z"
     description: 'Chart genérico e reutilizável para rodar aplicações FastAPI (ex.:
       kmee-tecnospeed-gateway)'
-    digest: f92088e2a3e888c42639a4fe78eafe596f99188501b14ee9f5815b76137d7193
+    digest: 6c200706dcc46d10cc8f6ec5ab346aaa81f9134dd5e460d8f8c1ecc97755b3fd
     keywords:
     - fastapi
     - python
@@ -75,9 +75,9 @@ entries:
   guestbook:
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2026-06-25T13:53:50.636162336Z"
+    created: "2026-07-09T09:31:09.902799634Z"
     description: Sample application
-    digest: 48561dff371c808f88dcd0a9de56efd4a46066a1e7ca7a07c85ba837347ecb36
+    digest: da69a31704deb6cea358837898d6798407a3ec6039ad05119aeba6582cb9c0dc
     name: guestbook
     urls:
     - https://kmee.github.io/kmee-helm-charts/guestbook-0.0.1.tgz
@@ -112,7 +112,7 @@ entries:
     version: 2.0.981
   - apiVersion: v2
     appVersion: "15.0"
-    created: "2026-06-25T13:53:50.643869506Z"
+    created: "2026-07-09T09:31:09.910228021Z"
     dependencies:
     - condition: postgresql.enabled,
       name: postgresql
@@ -124,7 +124,7 @@ entries:
       version: 15.7.x
     description: Odoo chart for Kubernetes using Tecnativa's Docker odoo base (Doodba)
       (longpolling)
-    digest: ddec029fad473450625479da0437c20ba4c6c8870795f5f8f48d1f1134183e8b
+    digest: 9e25aef5de3b1077a0986a342db87732c81e43c5813952ac1d11a888e6855b23
     icon: https://odoocdn.com/openerp_website/static/src/img/assets/png/odoo_logo.png?a=b
     keywords:
     - odoo
@@ -429,9 +429,9 @@ entries:
   odoo-multiple-pods:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-06-25T13:53:50.644411797Z"
+    created: "2026-07-09T09:31:09.910803229Z"
     description: A Helm chart for odoo deploy with multiple pods(odoo only)
-    digest: c91ea39886d09e6637c8dd0ccdb76efa726f88922b7b21c20d85f91202698852
+    digest: 134b6c2f5adc1af4fd450bb25c8dfb9e8a0bc9ade11b586dfecde6aede977cac
     name: odoo-multiple-pods
     type: application
     urls:
@@ -502,14 +502,14 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 11.14.0
-    created: "2026-06-25T13:53:50.647646023Z"
+    created: "2026-07-09T09:31:09.914040955Z"
     dependencies:
     - name: common
       repository: file://../common
       version: 1.x.x
     description: Chart for PostgreSQL, an object-relational database management system
       (ORDBMS) with an emphasis on extensibility and on standards-compliance.
-    digest: 9505d2af45d13020f167dd6a340d809f015c1b2f15a7a6d8dc04a9c335a25a63
+    digest: f8a55a7296545e522a56fdb91a3ede963aae1d627574d139afc801df0b5599e6
     home: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
     icon: https://bitnami.com/assets/stacks/postgresql/img/postgresql-stack-220x234.png
     keywords:
@@ -536,7 +536,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 6.2.6
-    created: "2026-06-25T13:53:50.65237572Z"
+    created: "2026-07-09T09:31:09.917662168Z"
     dependencies:
     - name: common
       repository: file://../common
@@ -544,7 +544,7 @@ entries:
     description: Open source, advanced key-value store. It is often referred to as
       a data structure server since keys can contain strings, hashes, lists, sets
       and sorted sets.
-    digest: 5571ec2a423b9af19f4b592225393e8410e3ef07fb3efff8ca3a29b3d56ef4f7
+    digest: fff4a86624faa65567c950e3e42dbfffc941b4d4ef1af7436313fe2889483b86
     home: https://github.com/bitnami/charts/tree/master/bitnami/redis
     icon: https://bitnami.com/assets/stacks/redis/img/redis-stack-220x234.png
     keywords:
@@ -564,6 +564,19 @@ entries:
     - https://kmee.github.io/kmee-helm-charts/redis-15.7.6.tgz
     version: 15.7.6
   simple-odoo:
+  - apiVersion: v2
+    appVersion: "16.0"
+    created: "2026-07-09T09:31:09.918247204Z"
+    description: A Helm chart for odoo deploy (odoo only)
+    digest: 1483014fbc6bac9b5eaf8e67d876972e1e1808f224023e91adbb71140b82beac
+    maintainers:
+    - email: contato@kmee.com.br
+      name: kmee
+    name: simple-odoo
+    type: application
+    urls:
+    - https://kmee.github.io/kmee-helm-charts/simple-odoo-1.0.13.tgz
+    version: 1.0.13
   - apiVersion: v2
     appVersion: "16.0"
     created: "2026-06-25T13:53:50.652838275Z"
@@ -715,4 +728,4 @@ entries:
     urls:
     - https://kmee.github.io/kmee-helm-charts/simple-odoo-1.0.0.tgz
     version: 1.0.0
-generated: "2026-06-25T13:53:50.634144582Z"
+generated: "2026-07-09T09:31:09.899822717Z"
