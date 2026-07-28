@@ -67,6 +67,33 @@ tests:
       - equal:
           path: spec.listeners[1].tls.certificateRefs[0].name
           value: barcode-tls
+      - notExists:
+          path: spec.listeners[1].tls.certificateRefs[0].namespace
+
+  - it: should set certificate namespace when overridden
+    set:
+      ingress.enabled: true
+      ingress.type: "gateway-api"
+      ingress.gatewayApi.createGateway: true
+      ingress.gatewayApi.certificateNamespace: certs-ns
+      ingress.tls:
+        - secretName: barcode-tls
+    asserts:
+      - equal:
+          path: spec.listeners[1].tls.certificateRefs[0].namespace
+          value: certs-ns
+
+  - it: should render gateway annotations
+    set:
+      ingress.enabled: true
+      ingress.type: "gateway-api"
+      ingress.gatewayApi.createGateway: true
+      ingress.gatewayApi.gatewayAnnotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+    asserts:
+      - equal:
+          path: metadata.annotations["cert-manager.io/cluster-issuer"]
+          value: letsencrypt-prod
 
   - it: should honor custom gatewayClassName and listener settings
     set:

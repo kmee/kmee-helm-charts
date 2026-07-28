@@ -46,6 +46,44 @@ tests:
           path: spec.parentRefs[0].sectionName
           value: "web"
 
+  - it: should attach to multiple listeners when listenerNames is set
+    set:
+      ingress.enabled: true
+      ingress.type: "gateway-api"
+      ingress.gatewayApi.listenerNames:
+        - http
+        - https
+    asserts:
+      - lengthEqual:
+          path: spec.parentRefs
+          count: 2
+      - equal:
+          path: spec.parentRefs[0].sectionName
+          value: http
+      - equal:
+          path: spec.parentRefs[1].sectionName
+          value: https
+
+  - it: should render route timeouts and extra filters
+    set:
+      ingress.enabled: true
+      ingress.type: "gateway-api"
+      ingress.gatewayApi.timeouts:
+        request: "30s"
+      ingress.gatewayApi.extraFilters:
+        - type: ExtensionRef
+          extensionRef:
+            group: gateway.nginx.org
+            kind: SnippetsFilter
+            name: allowlist
+    asserts:
+      - equal:
+          path: spec.rules[0].timeouts.request
+          value: "30s"
+      - equal:
+          path: spec.rules[0].filters[0].extensionRef.name
+          value: allowlist
+
   - it: should render all hosts as hostnames
     set:
       ingress.enabled: true

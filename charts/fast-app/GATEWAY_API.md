@@ -52,9 +52,30 @@ helm install ngf oci://ghcr.io/nginxinc/charts/nginx-gateway-fabric \
 O HTTPRoute é único e cobre todos os hostnames, então paths repetidos entre hosts
 são deduplicados em uma só rule.
 
-As anotações `nginx.ingress.kubernetes.io/*` **não** valem para Gateway API. Para
-timeouts, body size etc. use políticas do nginx-gateway-fabric
-(`ClientSettingsPolicy`, `UpstreamSettingsPolicy`) via `extraVolumes`/manifests próprios.
+As anotações `nginx.ingress.kubernetes.io/*` **não** valem para Gateway API. Migração:
+
+| Anotação do Ingress                          | Equivalente em Gateway API                            |
+|----------------------------------------------|-------------------------------------------------------|
+| `proxy-read-timeout` / `proxy-send-timeout`  | `ingress.gatewayApi.timeouts.{request,backendRequest}`|
+| `proxy-body-size`                            | `ClientSettingsPolicy.body.maxSize` (NGF)             |
+| `whitelist-source-range`                     | `SnippetsFilter` (`allow`/`deny`) + `extraFilters`    |
+| `cert-manager.io/cluster-issuer`             | `ingress.gatewayApi.gatewayAnnotations` (gateway-shim)|
+| `ssl-redirect`                               | `RequestRedirect` filter em `extraFilters`            |
+| `proxy-connect-timeout`                      | sem equivalente direto no NGF                         |
+
+`ClientSettingsPolicy`/`SnippetsFilter` são CRDs do NGF — aplique como manifests
+próprios no namespace do release e referencie via `extraFilters`:
+
+```yaml
+ingress:
+  gatewayApi:
+    extraFilters:
+      - type: ExtensionRef
+        extensionRef:
+          group: gateway.nginx.org
+          kind: SnippetsFilter
+          name: allowlist
+```
 
 ## Gateway compartilhado vs. próprio
 
@@ -82,8 +103,17 @@ ingress:
     createGateway: true
 ```
 
-O Secret TLS precisa estar no namespace do release (é o namespace usado em
-`certificateRefs[].namespace`).
+Por padrão os `certificateRefs` saem **sem** `namespace`, ou seja, o Secret é buscado
+no namespace do Gateway — não precisa de `ReferenceGrant`. Se o Secret estiver em
+outro namespace, informe `gatewayApi.certificateNamespace` e crie o `ReferenceGrant`
+correspondente.
+
+Com `gatewayAnnotations: {cert-manager.io/cluster-issuer: ...}` o cert-manager
+(gateway-shim) emite o certificado a partir do listener e grava o Secret no namespace
+do Gateway. Nesse caso deixe `certificateNamespace` vazio.
+
+Atenção ao `parentRefs`: o `sectionName` precisa apontar para o listener https, senão
+a rota só atende HTTP. Use `listenerNames: [http, https]` quando houver TLS.
 
 ## Verificação
 
