@@ -2,7 +2,7 @@ apiVersion: v2
 name: fastapi-app
 description: "Chart genérico e reutilizável para rodar aplicações FastAPI (ex.: kmee-tecnospeed-gateway)"
 type: application
-version: 0.2.0
+version: 0.2.1
 appVersion: "latest"
 keywords:
   - fastapi
