@@ -1,0 +1,112 @@
+suite: httproute tests
+templates:
+  - httproute.yaml
+tests:
+  - it: should not render HTTPRoute by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should not render HTTPRoute when ingress.type is ingress
+    set:
+      ingress.enabled: true
+      ingress.type: "ingress"
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render HTTPRoute when ingress.type is gateway-api
+    set:
+      ingress.enabled: true
+      ingress.type: "gateway-api"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HTTPRoute
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-fastapi-app
+
+  - it: should render HTTPRoute with correct parent reference
+    set:
+      ingress.enabled: true
+      ingress.type: "gateway-api"
+      ingress.gatewayApi.gatewayName: "my-gateway"
+      ingress.gatewayApi.gatewayNamespace: "ingress-ns"
+      ingress.gatewayApi.listenerName: "web"
+    asserts:
+      - equal:
+          path: spec.parentRefs[0].name
+          value: "my-gateway"
+      - equal:
+          path: spec.parentRefs[0].namespace
+          value: "ingress-ns"
+      - equal:
+          path: spec.parentRefs[0].sectionName
+          value: "web"
+
+  - it: should render all hosts as hostnames
+    set:
+      ingress.enabled: true
+      ingress.type: "gateway-api"
+      ingress.hosts:
+        - host: example.com
+          paths:
+            - path: /
+              pathType: Prefix
+        - host: www.example.com
+          paths:
+            - path: /
+              pathType: Prefix
+    asserts:
+      - equal:
+          path: spec.hostnames[0]
+          value: "example.com"
+      - equal:
+          path: spec.hostnames[1]
+          value: "www.example.com"
+      - lengthEqual:
+          path: spec.rules
+          count: 1
+
+  - it: should map pathType Prefix to PathPrefix and Exact to Exact
+    set:
+      ingress.enabled: true
+      ingress.type: "gateway-api"
+      ingress.hosts:
+        - host: example.com
+          paths:
+            - path: /api
+              pathType: Prefix
+            - path: /health
+              pathType: Exact
+    asserts:
+      - lengthEqual:
+          path: spec.rules
+          count: 2
+      - equal:
+          path: spec.rules[0].matches[0].path.type
+          value: PathPrefix
+      - equal:
+          path: spec.rules[0].matches[0].path.value
+          value: /api
+      - equal:
+          path: spec.rules[1].matches[0].path.type
+          value: Exact
+      - equal:
+          path: spec.rules[1].matches[0].path.value
+          value: /health
+
+  - it: should point backendRefs to the service port
+    set:
+      ingress.enabled: true
+      ingress.type: "gateway-api"
+      service.port: 8800
+    asserts:
+      - equal:
+          path: spec.rules[0].backendRefs[0].name
+          value: RELEASE-NAME-fastapi-app
+      - equal:
+          path: spec.rules[0].backendRefs[0].port
+          value: 8800

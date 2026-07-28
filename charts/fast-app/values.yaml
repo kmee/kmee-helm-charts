@@ -88,6 +88,8 @@ autoscaling:
 # ------------------------------------------------------------------------------
 ingress:
   enabled: false
+  # "ingress" = Ingress tradicional | "gateway-api" = Gateway API (nginx-gateway-fabric)
+  type: "ingress"
   className: nginx
   annotations:
     # Tamanho máximo do corpo da requisição (0 = sem limite)
@@ -108,6 +110,23 @@ ingress:
     # - secretName: barcode-tls
     #   hosts:
     #     - gateway.local
+
+  # Gateway API (nginx-gateway-fabric) — usado somente quando type = "gateway-api"
+  gatewayApi:
+    # Cria o recurso Gateway (deixe false se já existir um no cluster)
+    createGateway: false
+    # GatewayClass usada quando createGateway = true
+    gatewayClassName: nginx
+    # Nome do listener referenciado pelo HTTPRoute (sectionName)
+    listenerName: "http"
+    # Porta do listener (tipicamente 80)
+    listenerPort: 80
+    # Namespace onde o Gateway está publicado
+    gatewayNamespace: "nginx-gateway"
+    # Nome do Gateway
+    gatewayName: "nginx-gateway"
+    # Anotações extras no HTTPRoute
+    annotations: {}
 
 # ------------------------------------------------------------------------------
 # Diversos

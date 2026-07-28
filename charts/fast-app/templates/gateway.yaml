@@ -1,0 +1,33 @@
+{{- if and .Values.ingress.enabled (eq (default "ingress" .Values.ingress.type) "gateway-api") .Values.ingress.gatewayApi.createGateway }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.ingress.gatewayApi.gatewayName }}
+  namespace: {{ .Values.ingress.gatewayApi.gatewayNamespace }}
+  labels:
+    {{- include "fastapi-app.labels" . | nindent 4 }}
+spec:
+  gatewayClassName: {{ default "nginx" .Values.ingress.gatewayApi.gatewayClassName }}
+  listeners:
+    - name: {{ .Values.ingress.gatewayApi.listenerName }}
+      protocol: HTTP
+      port: {{ .Values.ingress.gatewayApi.listenerPort }}
+      allowedRoutes:
+        namespaces:
+          from: All
+    {{- if .Values.ingress.tls }}
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        certificateRefs:
+        {{- range .Values.ingress.tls }}
+          - name: {{ .secretName }}
+            namespace: {{ $.Release.Namespace }}
+        {{- end }}
+      allowedRoutes:
+        namespaces:
+          from: All
+    {{- end }}
+{{- end }}
