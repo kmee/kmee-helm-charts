@@ -14,6 +14,14 @@ tests:
       - hasDocuments:
           count: 1
 
+  - it: should not render ingress when type is gateway-api
+    set:
+      ingress.enabled: true
+      ingress.type: "gateway-api"
+    asserts:
+      - hasDocuments:
+          count: 0
+
   - it: should use nginx as default ingressClassName
     set:
       ingress.enabled: true
