@@ -119,6 +119,13 @@ ingress:
     gatewayClassName: nginx
     # Nome do listener referenciado pelo HTTPRoute (sectionName)
     listenerName: "http"
+    # Para anexar a mais de um listener (ex.: http + https), liste aqui.
+    # Se preenchido, tem prioridade sobre listenerName.
+    listenerNames: []
+    # Timeouts da rota (substitui proxy-read-timeout / proxy-send-timeout)
+    timeouts: {}
+    #  request: "30s"
+    #  backendRequest: "30s"
     # Porta do listener (tipicamente 80)
     listenerPort: 80
     # Namespace onde o Gateway está publicado
@@ -127,6 +134,19 @@ ingress:
     gatewayName: "nginx-gateway"
     # Anotações extras no HTTPRoute
     annotations: {}
+    # Anotações no Gateway criado pelo chart (ex.: cert-manager.io/cluster-issuer)
+    gatewayAnnotations: {}
+    # Namespace dos Secrets TLS referenciados pelo listener https.
+    # Vazio = mesmo namespace do Gateway (recomendado; não exige ReferenceGrant).
+    certificateNamespace: ""
+    # Filters aplicados em cada rule do HTTPRoute
+    # (ex.: SnippetsFilter do nginx-gateway-fabric, RequestHeaderModifier)
+    extraFilters: []
+    #  - type: ExtensionRef
+    #    extensionRef:
+    #      group: gateway.nginx.org
+    #      kind: SnippetsFilter
+    #      name: allowlist
 
 # ------------------------------------------------------------------------------
 # Diversos

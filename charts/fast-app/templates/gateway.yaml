@@ -6,6 +6,10 @@ metadata:
   namespace: {{ .Values.ingress.gatewayApi.gatewayNamespace }}
   labels:
     {{- include "fastapi-app.labels" . | nindent 4 }}
+  {{- with .Values.ingress.gatewayApi.gatewayAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   gatewayClassName: {{ default "nginx" .Values.ingress.gatewayApi.gatewayClassName }}
   listeners:
@@ -22,9 +26,12 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
+        {{- /* sem namespace = mesmo namespace do Gateway (não exige ReferenceGrant) */}}
         {{- range .Values.ingress.tls }}
           - name: {{ .secretName }}
-            namespace: {{ $.Release.Namespace }}
+            {{- with $.Values.ingress.gatewayApi.certificateNamespace }}
+            namespace: {{ . }}
+            {{- end }}
         {{- end }}
       allowedRoutes:
         namespaces:

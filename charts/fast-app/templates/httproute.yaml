@@ -12,9 +12,13 @@ metadata:
     {{- end }}
 spec:
   parentRefs:
-    - name: {{ .Values.ingress.gatewayApi.gatewayName }}
-      namespace: {{ .Values.ingress.gatewayApi.gatewayNamespace }}
-      sectionName: {{ .Values.ingress.gatewayApi.listenerName }}
+    {{- $ga := .Values.ingress.gatewayApi }}
+    {{- $listeners := $ga.listenerNames | default (list $ga.listenerName) }}
+    {{- range $listeners }}
+    - name: {{ $ga.gatewayName }}
+      namespace: {{ $ga.gatewayNamespace }}
+      sectionName: {{ . }}
+    {{- end }}
   hostnames:
     {{- range .Values.ingress.hosts }}
     - {{ .host | quote }}
@@ -32,8 +36,16 @@ spec:
         - path:
             type: {{ if eq $pathType "Exact" }}Exact{{ else }}PathPrefix{{ end }}
             value: {{ $path | quote }}
+      {{- with $.Values.ingress.gatewayApi.extraFilters }}
+      filters:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       backendRefs:
         - name: {{ include "fastapi-app.fullname" $ }}
           port: {{ $.Values.service.port }}
+      {{- with $.Values.ingress.gatewayApi.timeouts }}
+      timeouts:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     {{- end }}
 {{- end }}
