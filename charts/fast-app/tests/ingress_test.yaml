@@ -38,3 +38,20 @@ tests:
       - equal:
           path: spec.ingressClassName
           value: traefik
+
+  # Guarda de regressão: service.extraPorts NUNCA deve virar rota. Uma porta
+  # interna alcançável pelo ingress cairia no catch-all da app e responderia
+  # HTML com 200 em vez da API interna.
+  - it: should never route service.extraPorts
+    set:
+      ingress.enabled: true
+      service.extraPorts:
+        - name: internal
+          port: 8082
+    asserts:
+      - lengthEqual:
+          path: spec.rules[0].http.paths
+          count: 1
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.number
+          value: 8800

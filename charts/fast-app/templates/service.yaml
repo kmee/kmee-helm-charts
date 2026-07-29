@@ -11,5 +11,11 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+    {{- range .Values.service.extraPorts }}
+    - name: {{ required "service.extraPorts[].name é obrigatório" .name }}
+      port: {{ required "service.extraPorts[].port é obrigatório" .port }}
+      targetPort: {{ .targetPort | default .port }}
+      protocol: {{ .protocol | default "TCP" }}
+    {{- end }}
   selector:
     {{- include "fastapi-app.selectorLabels" . | nindent 4 }}
