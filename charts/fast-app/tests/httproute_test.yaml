@@ -148,3 +148,24 @@ tests:
       - equal:
           path: spec.rules[0].backendRefs[0].port
           value: 8800
+
+  # Guarda de regressão: service.extraPorts NUNCA deve virar rota. Uma porta
+  # interna alcançável pelo gateway cairia no catch-all da app e responderia
+  # HTML com 200 em vez da API interna.
+  - it: should never route service.extraPorts
+    set:
+      ingress.enabled: true
+      ingress.type: "gateway-api"
+      service.extraPorts:
+        - name: internal
+          port: 8082
+    asserts:
+      - lengthEqual:
+          path: spec.rules
+          count: 1
+      - lengthEqual:
+          path: spec.rules[0].backendRefs
+          count: 1
+      - equal:
+          path: spec.rules[0].backendRefs[0].port
+          value: 8800

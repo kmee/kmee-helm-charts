@@ -46,6 +46,11 @@ spec:
             - name: http
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
+            {{- range .Values.service.extraPorts }}
+            - name: {{ required "service.extraPorts[].name é obrigatório" .name }}
+              containerPort: {{ .targetPort | default (required "service.extraPorts[].port é obrigatório" .port) }}
+              protocol: {{ .protocol | default "TCP" }}
+            {{- end }}
           {{- if or .Values.env .Values.secretEnv .Values.envFrom }}
           envFrom:
             {{- if .Values.env }}

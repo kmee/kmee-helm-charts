@@ -27,6 +27,28 @@ service:
   port: 8800
   # Porta do container para onde o tráfego é encaminhado.
   targetPort: 5057
+  # Portas adicionais expostas no mesmo Service e no mesmo container.
+  # Use quando o processo escuta em mais de uma porta (ex.: uma API interna
+  # service-to-service separada da pública).
+  #
+  # Estas portas NÃO são roteadas pelo ingress/httproute — eles sempre apontam
+  # para `service.port`. Com `service.type: ClusterIP` (default), portanto, só
+  # são alcançáveis pelo DNS interno do cluster:
+  #   http://<service>.<namespace>.svc.cluster.local:<port>
+  #
+  # ATENÇÃO: com `service.type: NodePort` ou `LoadBalancer` estas portas também
+  # são publicadas externamente, como qualquer porta do Service. Se a porta deve
+  # ficar restrita ao cluster, use ClusterIP (e/ou uma NetworkPolicy).
+  #
+  # Cada item aceita:
+  #   name       (obrigatório) nome da porta; máx. 15 caracteres, [a-z0-9-]
+  #   port       (obrigatório) porta exposta pelo Service
+  #   targetPort (opcional)    porta do container, NUMÉRICA (vira containerPort,
+  #                            que não aceita porta nomeada); default = port
+  #   protocol   (opcional)    default = TCP
+  extraPorts: []
+    # - name: internal
+    #   port: 8082
 
 # ------------------------------------------------------------------------------
 # Variáveis de ambiente (substitui o env_file: .env do compose)

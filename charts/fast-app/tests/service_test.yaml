@@ -21,3 +21,60 @@ tests:
       - equal:
           path: spec.type
           value: LoadBalancer
+
+  - it: should expose only the http port by default
+    asserts:
+      - lengthEqual:
+          path: spec.ports
+          count: 1
+      - equal:
+          path: spec.ports[0].name
+          value: http
+
+  - it: should append extraPorts after the http port
+    set:
+      service.extraPorts:
+        - name: internal
+          port: 8082
+    asserts:
+      - lengthEqual:
+          path: spec.ports
+          count: 2
+      - equal:
+          path: spec.ports[0].name
+          value: http
+      - equal:
+          path: spec.ports[1]
+          value:
+            name: internal
+            port: 8082
+            targetPort: 8082
+            protocol: TCP
+
+  - it: should honour explicit targetPort and protocol on extraPorts
+    set:
+      service.extraPorts:
+        - name: metrics
+          port: 9090
+          targetPort: 9100
+          protocol: UDP
+    asserts:
+      - equal:
+          path: spec.ports[1]
+          value:
+            name: metrics
+            port: 9090
+            targetPort: 9100
+            protocol: UDP
+
+  - it: should support multiple extraPorts
+    set:
+      service.extraPorts:
+        - name: internal
+          port: 8082
+        - name: metrics
+          port: 9090
+    asserts:
+      - lengthEqual:
+          path: spec.ports
+          count: 3

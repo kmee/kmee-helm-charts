@@ -8,6 +8,11 @@ containerPort: 80
 service:
   port: 80
   targetPort: 80
+  # Exercita o caminho multi-porta contra o API server real do kind, que é quem
+  # valida de fato nome/número de porta duplicado e o limite de 15 caracteres.
+  extraPorts:
+    - name: internal
+      port: 8082
 
 healthCheck:
   enabled: false

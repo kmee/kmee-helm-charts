@@ -39,3 +39,52 @@ tests:
     asserts:
       - notExists:
           path: spec.template.spec.containers[0].livenessProbe
+
+  - it: should declare only the http container port by default
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].ports
+          count: 1
+      - equal:
+          path: spec.template.spec.containers[0].ports[0].name
+          value: http
+
+  - it: should derive container ports from service.extraPorts
+    set:
+      service.extraPorts:
+        - name: internal
+          port: 8082
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].ports
+          count: 2
+      - equal:
+          path: spec.template.spec.containers[0].ports[1]
+          value:
+            name: internal
+            containerPort: 8082
+            protocol: TCP
+
+  - it: should use extraPorts targetPort as the containerPort when set
+    set:
+      service.extraPorts:
+        - name: internal
+          port: 8082
+          targetPort: 9000
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].ports[1].containerPort
+          value: 9000
+
+  - it: should keep probes on the http port when extraPorts are set
+    set:
+      service.extraPorts:
+        - name: internal
+          port: 8082
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+          value: http
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+          value: http
