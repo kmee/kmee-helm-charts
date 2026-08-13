@@ -1,0 +1,197 @@
+suite: extra ingress tests
+templates:
+  - ingress-extra.yaml
+tests:
+  - it: should not render anything when extraIngresses is empty
+    set:
+      internalip: "10.0.0.1"
+      ingress.hosts[0].url: "example.com"
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render one ingress per extraIngresses entry
+    set:
+      internalip: "10.0.0.1"
+      ingress.hosts[0].url: "example.com"
+      extraIngresses:
+        - name: websocket
+          path: /websocket
+        - name: longpolling
+          path: /longpolling
+    asserts:
+      - hasDocuments:
+          count: 2
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-external-ingress-ingress-websocket
+        documentIndex: 0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-external-ingress-ingress-longpolling
+        documentIndex: 1
+
+  - it: should use the path from the extraIngresses entry
+    set:
+      internalip: "10.0.0.1"
+      ingress.hosts[0].url: "example.com"
+      extraIngresses:
+        - name: websocket
+          path: /websocket
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].path
+          value: /websocket
+      - equal:
+          path: spec.rules[0].http.paths[0].pathType
+          value: ImplementationSpecific
+
+  - it: should render the entry annotations
+    set:
+      internalip: "10.0.0.1"
+      ingress.hosts[0].url: "example.com"
+      extraIngresses:
+        - name: websocket
+          path: /websocket
+          annotations:
+            nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+            nginx.ingress.kubernetes.io/rewrite-target: /
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/proxy-read-timeout"]
+          value: "3600"
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/rewrite-target"]
+          value: /
+
+  - it: should not inherit the global ingress annotations
+    set:
+      internalip: "10.0.0.1"
+      ingress.hosts[0].url: "example.com"
+      extraIngresses:
+        - name: websocket
+          path: /websocket
+    asserts:
+      - notExists:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/proxy-body-size"]
+
+  - it: should render one rule per configured host
+    set:
+      internalip: "10.0.0.1"
+      ingress.hosts:
+        - url: "example.com"
+        - url: "other.example.com"
+      extraIngresses:
+        - name: websocket
+          path: /websocket
+    asserts:
+      - equal:
+          path: spec.rules[0].host
+          value: "example.com"
+      - equal:
+          path: spec.rules[1].host
+          value: "other.example.com"
+      - equal:
+          path: spec.rules[1].http.paths[0].path
+          value: /websocket
+
+  - it: should route to the release-scoped service in backend
+    set:
+      internalip: "10.0.0.1"
+      internalport: 8080
+      ingress.hosts[0].url: "example.com"
+      extraIngresses:
+        - name: websocket
+          path: /websocket
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.name
+          value: RELEASE-NAME-external-ingress-service
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.number
+          value: 8080
+
+  - it: should use the entry port when set
+    set:
+      internalip: "10.0.0.1"
+      internalport: 8080
+      ingress.hosts[0].url: "example.com"
+      extraIngresses:
+        - name: websocket
+          path: /websocket
+          port: 8072
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.number
+          value: 8072
+
+  - it: should use nginx as default ingressClassName
+    set:
+      internalip: "10.0.0.1"
+      ingress.hosts[0].url: "example.com"
+      extraIngresses:
+        - name: websocket
+          path: /websocket
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
+
+  - it: should use custom ingressClassName when set
+    set:
+      internalip: "10.0.0.1"
+      ingress.className: traefik
+      ingress.hosts[0].url: "example.com"
+      extraIngresses:
+        - name: websocket
+          path: /websocket
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: traefik
+
+  - it: should render TLS section reusing the main ingress secret name
+    set:
+      internalip: "10.0.0.1"
+      ingress.tls.enabled: true
+      ingress.hosts[0].url: "example.com"
+      extraIngresses:
+        - name: websocket
+          path: /websocket
+    asserts:
+      - equal:
+          path: spec.tls[0].hosts[0]
+          value: "example.com"
+      - equal:
+          path: spec.tls[0].secretName
+          value: example-com--tls-secret
+
+  - it: should not render TLS section when disabled
+    set:
+      internalip: "10.0.0.1"
+      ingress.tls.enabled: false
+      ingress.hosts[0].url: "example.com"
+      extraIngresses:
+        - name: websocket
+          path: /websocket
+    asserts:
+      - notExists:
+          path: spec.tls
+
+  - it: should render common labels
+    set:
+      internalip: "10.0.0.1"
+      ingress.hosts[0].url: "example.com"
+      extraIngresses:
+        - name: websocket
+          path: /websocket
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: external-ingress
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: RELEASE-NAME
+      - equal:
+          path: metadata.labels["app"]
+          value: RELEASE-NAME-external-ingress
