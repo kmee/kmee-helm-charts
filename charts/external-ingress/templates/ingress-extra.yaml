@@ -31,7 +31,7 @@ spec:
             service:
               name: {{ include "external-ingress.serviceName" $ }}
               port:
-                number: {{ $.Values.internalport | int }}
+                number: {{ default $.Values.internalport $extra.port | int }}
     {{- end }}
 ---
 {{- end }}

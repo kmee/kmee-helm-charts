@@ -13,6 +13,14 @@ whitelistIPs:
   enabled: false
   ips: []
 
+# ingressos extras, um Ingress por entrada, com anotações próprias
+# - name: websocket
+#   path: /websocket
+#   port: 8072          # opcional, default internalport
+#   annotations:
+#     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+extraIngresses: []
+
 ingress:
   className: nginx
   clusterIssuer: letsencrypt-prod

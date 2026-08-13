@@ -111,6 +111,20 @@ tests:
           path: spec.rules[0].http.paths[0].backend.service.port.number
           value: 8080
 
+  - it: should use the entry port when set
+    set:
+      internalip: "10.0.0.1"
+      internalport: 8080
+      ingress.hosts[0].url: "example.com"
+      extraIngresses:
+        - name: websocket
+          path: /websocket
+          port: 8072
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.number
+          value: 8072
+
   - it: should use nginx as default ingressClassName
     set:
       internalip: "10.0.0.1"
